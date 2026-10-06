@@ -1,0 +1,195 @@
+#pragma once
+#include <cstdint>
+#include "bestway_models.h"
+
+class BestwayBus {
+public:
+    enum class Mode : uint8_t {
+        Simulation,
+        Hardware,
+    };
+
+    void begin();
+    void loop();
+
+    bool is_connected() const;
+    Mode mode() const;
+    const char *mode_name() const;
+    uint32_t state_version() const;
+
+    BestwayModel model() const;
+    const BestwayModelInfo &model_info() const;
+    const char *model_name() const;
+    const char *protocol_name() const;
+    bool has_air() const;
+    bool has_jets() const;
+
+    void set_power(bool on);
+    void set_filter(bool on);
+    void set_bubbles(bool on);
+    void set_jets(bool on);
+    void set_heater(bool on);
+    void set_target_temperature(int target_c);
+
+private:
+    struct PendingBool {
+        bool active = false;
+        bool value = false;
+        uint64_t due_ms = 0;
+    };
+
+    bool connected_ = false;
+    Mode mode_ = Mode::Simulation;
+
+    uint8_t hw_state_index_ = 0;
+
+
+    // Veilige standaard zolang hardware-selectie nog niet uit configuratie komt.
+    BestwayModel model_ = BestwayModel::PRE2021;
+    uint32_t state_version_ = 0;
+    uint64_t last_packet_ms_ = 0;
+    uint64_t last_temp_step_ms_ = 0;
+
+    uint8_t last_cio_frame_[7] = {};
+    uint8_t last_dsp_frame_[7] = {};
+    uint8_t to_cio_frame_[7] = {};
+    bool have_cio_frame_ = false;
+    bool have_dsp_frame_ = false;
+    bool have_to_cio_frame_ = false;
+
+    bool dsp_bubbles_ = false;
+    bool dsp_pump_ = false;
+    bool dsp_jets_ = false;
+    bool have_dsp_state_ = false;
+
+    bool pending_pump_ = false;
+    bool pending_bubbles_ = false;
+    bool pending_jets_ = false;
+
+    bool target_pump_ = false;
+    bool target_bubbles_ = false;
+    bool target_jets_ = false;
+
+    // 6-wire Type1 CIO protocol state
+    volatile int type1_cio_byte_count_ = 0;
+    volatile int type1_cio_bit_count_ = 0;
+    volatile int type1_cio_cmd_matches_ = 0;
+    volatile int type1_cio_send_bit_ = 8;
+
+    volatile uint8_t type1_cio_received_byte_ = 0;
+    volatile uint8_t type1_cio_brightness_ = 7;
+    volatile uint8_t type1_cio_payload_[11] = {};
+    
+    // Complete ISR-snapshot voor verwerking buiten de interrupt.
+    volatile uint8_t type1_cio_ready_payload_[11] = {};
+    volatile uint8_t type1_cio_ready_brightness_ = 7;
+    volatile uint8_t type1_cio_ready_packet_error_ = 0;
+
+uint8_t type1_cio_prev_payload_[11] = {};
+
+    volatile uint8_t type1_cio_packet_error_ = 0;
+    volatile bool type1_cio_data_is_output_ = false;
+    volatile bool type1_cio_packet_active_ = false;
+    volatile bool type1_cio_new_packet_ = false;
+
+    uint16_t type1_cio_button_code_ = 0;
+
+    enum class Type1CapturePhase : uint8_t {
+        ReadTemperature = 0,
+        Uncertain,
+        ReadTarget
+    };
+
+    Type1CapturePhase type1_capture_phase_ =
+        Type1CapturePhase::ReadTemperature;
+
+    uint64_t type1_button_release_ms_ = 0;
+
+    // false = Celsius, true = Fahrenheit
+    bool type1_unit_fahrenheit_ = false;
+
+    // 6-wire Type1 DSP protocol state
+    uint8_t type1_dsp_payload_[11] = {};
+    uint8_t type1_dsp_raw_button_[2] = {};
+
+    uint16_t type1_dsp_button_code_ = 0;
+
+    // Tijdelijke virtuele knopdruk richting pomp.
+    bool type1_remote_button_active_ = false;
+    uint16_t type1_remote_button_code_ = 0;
+    uint64_t type1_remote_button_until_ms_ = 0;
+
+    BestwayButton type1_remote_button_ =
+        BestwayButton::NoButton;
+
+    bool type1_remote_wait_for_state_ = false;
+    bool type1_remote_target_value_ = false;
+
+    enum class Type1RemoteSequence : uint8_t {
+        None = 0,
+        HeatEnable,
+        HeatDisable
+    };
+
+    Type1RemoteSequence type1_remote_sequence_ =
+        Type1RemoteSequence::None;
+
+    uint8_t type1_remote_sequence_step_ = 0;
+
+    bool type1_target_sequence_active_ = false;
+    int type1_target_sequence_target_c_ = 0;
+    bool type1_target_release_active_ = false;
+    uint64_t type1_target_release_until_ms_ = 0;
+
+    uint64_t type1_dsp_last_refresh_ms_ = 0;
+    uint64_t type1_dsp_last_button_ms_ = 0;
+
+    uint8_t type1_dsp_brightness_ = 7;
+
+    // GPIO-configuratie uit de Hardware-pagina.
+    // Volgorde: CIO1, CIO2, CIO3, DSP1, DSP2, DSP3, audio, temp.
+    uint8_t pins_[8] = {4, 5, 6, 7, 10, 11, 18, 19};
+
+    PendingBool power_;
+    PendingBool filter_;
+    PendingBool bubbles_;
+    PendingBool jets_;
+    PendingBool heater_;
+
+    void queue(PendingBool &pending, bool value, const char *name);
+    bool apply_pending(PendingBool &pending, bool &target, const char *name, uint64_t now_ms);
+    void bump_version();
+    void simulation_loop(uint64_t now_ms);
+    void hardware_loop(uint64_t now_ms);
+
+    void apply_4wire_toggle(Bestway4WireToggle toggle);
+    bool sync_4wire_state_from_dsp(bool bubbles, bool jets, bool pump, bool heat);
+    bool build_4wire_cio_frame();
+    bool init_uart4wire();
+    void uart4wire_loop(uint64_t now_ms);
+
+    // 6-wire Type1 CIO ISR interface
+    static void type1_cio_cs_isr(void *arg);
+    static void type1_cio_clk_isr(void *arg);
+    void type1_cio_handle_cs_isr();
+    void type1_cio_handle_clk_isr();
+    bool init_type1_cio();
+    void process_type1_cio_packet();
+    char decode_type1_char(uint8_t value) const;
+
+    void type1_dsp_send_bits(uint32_t bits, int count);
+    uint16_t type1_dsp_receive_bits();
+    bool init_type1_dsp();
+    void type1_dsp_upload_payload(uint64_t now_ms);
+    void type1_dsp_poll_button(uint64_t now_ms);
+    void type1_remote_press(BestwayButton button, uint32_t duration_ms);
+    void type1_remote_press_state(
+        BestwayButton button,
+        bool target_value,
+        uint32_t max_duration_ms = 5000);
+    void type1_remote_button_loop(uint64_t now_ms);
+    void type1_remote_sequence_loop(uint64_t now_ms);
+    void type1_target_sequence_loop(uint64_t now_ms);
+};
+
+extern BestwayBus bestway_bus;

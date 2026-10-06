@@ -1,0 +1,11 @@
+menu "Bestway Spa Control v5"
+
+config BESTWAY_SIMULATION
+    bool "Bestway pump simulation mode"
+    default y
+    help
+        Enable a software simulated Bestway pump. This allows Matter and later
+        web/MQTT integration to be tested without a physical spa connected.
+        Disable only when the native CIO/DSP hardware transport is available.
+
+endmenu

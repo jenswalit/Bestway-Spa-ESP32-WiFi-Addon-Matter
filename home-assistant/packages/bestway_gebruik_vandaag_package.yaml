@@ -1,0 +1,30 @@
+# Alleen toevoegen als deze history_stats-sensoren nog niet bestaan.
+# Package voor dezelfde packages-map als het bestaande opwarmmodel.
+sensor:
+  - platform: history_stats
+    name: Bestway verwarming vandaag
+    unique_id: bestway_verwarming_vandaag_v1
+    entity_id: binary_sensor.bestway_lay_z_spa_daadwerkelijk_verwarmen
+    state: 'on'
+    type: time
+    state_class: total_increasing
+    start: "{{ as_timestamp(today_at()) }}"
+    end: "{{ as_timestamp(now()) }}"
+  - platform: history_stats
+    name: Bestway filter vandaag
+    unique_id: bestway_filter_vandaag_v1
+    entity_id: switch.bestway_lay_z_spa_filter
+    state: 'on'
+    type: time
+    state_class: total_increasing
+    start: "{{ as_timestamp(today_at()) }}"
+    end: "{{ as_timestamp(now()) }}"
+  - platform: history_stats
+    name: Bestway bubbels vandaag
+    unique_id: bestway_bubbels_vandaag_v1
+    entity_id: switch.bestway_lay_z_spa_bubbels
+    state: 'on'
+    type: time
+    state_class: total_increasing
+    start: "{{ as_timestamp(today_at()) }}"
+    end: "{{ as_timestamp(now()) }}"

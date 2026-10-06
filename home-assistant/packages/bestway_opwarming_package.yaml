@@ -1,0 +1,149 @@
+# Home Assistant package; firmware en MQTT-configuratie blijven ongewijzigd.
+template:
+  - sensor:
+      - name: Bestway buitentemperatuur
+        unique_id: bestway_buiten_buienradar_v1
+        default_entity_id: sensor.bestway_buitentemperatuur
+        device_class: temperature
+        state_class: measurement
+        unit_of_measurement: °C
+        availability: >-
+          {{ has_value('weather.buienradar') and
+             is_number(state_attr('weather.buienradar', 'temperature')) and
+             state_attr('weather.buienradar', 'temperature_unit') in ['°C', '°F'] }}
+        state: >-
+          {% set t = state_attr('weather.buienradar', 'temperature') | float(0) %}
+          {{ (((t - 32) / 1.8) if state_attr('weather.buienradar', 'temperature_unit') == '°F' else t) | round(1) }}
+
+  # Bewaart maximaal 48 meetperiodes. Geen HTTP-verkeer naar de ESP.
+  # Reset alleen de lopende meetperiode bij HA-start; geleerde samples blijven.
+  - triggers:
+      - trigger: time_pattern
+        minutes: /1
+        id: tick
+      - trigger: homeassistant
+        event: start
+        id: restart
+      - trigger: state
+        entity_id:
+          - binary_sensor.bestway_lay_z_spa_daadwerkelijk_verwarmen
+          - binary_sensor.bestway_lay_z_spa_spa_verbonden
+          - switch.bestway_lay_z_spa_filter
+          - switch.bestway_lay_z_spa_bubbels
+          - sensor.bestway_lay_z_spa_watertemperatuur
+          - sensor.bestway_buitentemperatuur
+        id: change
+    actions:
+      - variables:
+          result: >-
+            {% set old = state_attr('sensor.bestway_opwarmmodel', 'model') or {} %}
+            {% set samples = old.get('samples', []) %}
+            {% set batch = old.get('batch', {}) %}
+            {% set stamp = as_timestamp(now()) %}
+            {% set w = states('sensor.bestway_lay_z_spa_watertemperatuur') %}
+            {% set o = states('sensor.bestway_buitentemperatuur') %}
+            {% set data_ok = is_number(w) and is_number(o) and
+               states('binary_sensor.bestway_lay_z_spa_daadwerkelijk_verwarmen') in ['on', 'off'] and
+               states('switch.bestway_lay_z_spa_filter') in ['on', 'off'] and
+               states('switch.bestway_lay_z_spa_bubbels') in ['on', 'off'] and
+               is_state('binary_sensor.bestway_lay_z_spa_spa_verbonden', 'on') %}
+            {% set eligible = data_ok and
+               is_state('binary_sensor.bestway_lay_z_spa_daadwerkelijk_verwarmen', 'on') and
+               is_state('switch.bestway_lay_z_spa_filter', 'on') and
+               is_state('switch.bestway_lay_z_spa_bubbels', 'off') %}
+            {% if trigger.id == 'restart' %}
+              {{ dict(samples=samples, batch={}) }}
+            {% else %}
+              {% set age = stamp - batch.get('start', stamp) %}
+              {% if batch and data_ok and (not eligible or age >= 7200) %}
+                {% set delta = (w | float) - batch.get('water', w | float) %}
+                {% set rate = delta * 3600 / age if age > 0 else 0 %}
+                {% if age >= 3600 and delta >= 0 and rate <= 6 %}
+                  {% set sample = dict(at=stamp | int,
+                     outside=((o | float + batch.get('outside', o | float)) / 2) | round(1),
+                     water=((w | float + batch.get('water', w | float)) / 2) | round(1),
+                     hours=(age / 3600) | round(3), rise=delta | round(2), rate=rate | round(3)) %}
+                  {% set samples = (samples + [sample])[-48:] %}
+                {% endif %}
+                {% set batch = {} %}
+              {% endif %}
+              {% if not eligible %}
+                {% set batch = {} %}
+              {% elif not batch %}
+                {% set batch = dict(start=stamp, water=w | float, outside=o | float) %}
+              {% endif %}
+              {{ dict(samples=samples, batch=batch) }}
+            {% endif %}
+    sensor:
+      - name: Bestway opwarmmodel
+        unique_id: bestway_opwarmmodel_v1
+        default_entity_id: sensor.bestway_opwarmmodel
+        icon: mdi:chart-scatter-plot
+        state: "{{ result.samples | count }}"
+        attributes:
+          model: "{{ result }}"
+
+  - sensor:
+      - name: Bestway opwarmsnelheid schatting
+        unique_id: bestway_opwarmsnelheid_v1
+        default_entity_id: sensor.bestway_opwarmsnelheid_schatting
+        unit_of_measurement: °C/h
+        icon: mdi:thermometer-chevron-up
+        availability: >-
+          {{ is_number(states('sensor.bestway_buitentemperatuur')) and
+             is_number(states('sensor.bestway_lay_z_spa_watertemperatuur')) and
+             is_number(states('number.bestway_lay_z_spa_doeltemperatuur')) and
+             is_number(states('sensor.bestway_opwarmmodel')) }}
+        state: >-
+          {% set samples = (state_attr('sensor.bestway_opwarmmodel', 'model') or {}).get('samples', []) %}
+          {% set outside = states('sensor.bestway_buitentemperatuur') | float(0) %}
+          {% set water = states('sensor.bestway_lay_z_spa_watertemperatuur') | float(0) %}
+          {% set target = states('number.bestway_lay_z_spa_doeltemperatuur') | float(0) %}
+          {% set midpoint = (water + [target, water] | max) / 2 %}
+          {% set ns = namespace(n=0, hours=0.0, rise=0.0) %}
+          {% for s in samples %}
+            {% if (s.outside - outside) | abs <= 4 and (s.water - midpoint) | abs <= 6 %}
+              {% set ns.n = ns.n + 1 %}
+              {% set ns.hours = ns.hours + s.hours %}
+              {% set ns.rise = ns.rise + s.rise %}
+            {% endif %}
+          {% endfor %}
+          {{ (ns.rise / ns.hours) | round(2) if ns.n >= 3 and ns.hours > 0 else 'unknown' }}
+        attributes:
+          vergelijkbare_metingen: >-
+            {% set samples = (state_attr('sensor.bestway_opwarmmodel', 'model') or {}).get('samples', []) %}
+            {% set o = states('sensor.bestway_buitentemperatuur') | float(0) %}
+            {% set w = states('sensor.bestway_lay_z_spa_watertemperatuur') | float(0) %}
+            {% set t = states('number.bestway_lay_z_spa_doeltemperatuur') | float(0) %}
+            {% set mid = (w + [t, w] | max) / 2 %}
+            {% set ns = namespace(n=0) %}
+            {% for s in samples %}
+              {% if (s.outside - o) | abs <= 4 and (s.water - mid) | abs <= 6 %}
+                {% set ns.n = ns.n + 1 %}
+              {% endif %}
+            {% endfor %}
+            {{ ns.n }}
+
+      - name: Bestway resterende opwarmtijd
+        unique_id: bestway_opwarmtijd_v1
+        default_entity_id: sensor.bestway_resterende_opwarmtijd
+        unit_of_measurement: min
+        device_class: duration
+        icon: mdi:timer-sand
+        availability: >-
+          {{ is_number(states('sensor.bestway_lay_z_spa_watertemperatuur')) and
+             is_number(states('number.bestway_lay_z_spa_doeltemperatuur')) and
+             is_number(states('sensor.bestway_buitentemperatuur')) and
+             is_state('binary_sensor.bestway_lay_z_spa_spa_verbonden', 'on') and
+             ((states('sensor.bestway_lay_z_spa_watertemperatuur') | float >=
+                states('number.bestway_lay_z_spa_doeltemperatuur') | float) or
+              (is_state('binary_sensor.bestway_lay_z_spa_daadwerkelijk_verwarmen', 'on') and
+               is_state('switch.bestway_lay_z_spa_filter', 'on') and
+               is_state('switch.bestway_lay_z_spa_bubbels', 'off') and
+               is_number(states('sensor.bestway_opwarmsnelheid_schatting')) and
+               states('sensor.bestway_opwarmsnelheid_schatting') | float > 0)) }}
+        state: >-
+          {% set delta = states('number.bestway_lay_z_spa_doeltemperatuur') | float(0) -
+             states('sensor.bestway_lay_z_spa_watertemperatuur') | float(0) %}
+          {% set rate = states('sensor.bestway_opwarmsnelheid_schatting') | float(0) %}
+          {{ 0 if delta <= 0 else ((delta * 60 / rate / 15) | round(0, 'ceil') * 15) | int if rate > 0 else 'unknown' }}

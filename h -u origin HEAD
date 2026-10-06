@@ -1,0 +1,104 @@
+ .gitattributes                                     |    16 [32m+[m
+ .gitignore                                         |    38 [32m+[m
+ CHANGELOG.md                                       |    24 [32m+[m
+ CONTRIBUTING.md                                    |    17 [32m+[m
+ README.md                                          |    80 [32m+[m[31m-[m
+ docs/BUILD_NL.md                                   |    76 [32m+[m
+ docs/GITHUB_UPLOAD_NL.md                           |   136 [32m+[m
+ docs/HARDWARE_NL.md                                |    35 [32m+[m
+ docs/HERKOMST_EN_LICENTIES.md                      |    20 [32m+[m
+ docs/MATTER_NL.md                                  |    25 [32m+[m
+ docs/PLANNER_DAGFIX_NL.txt                         |    58 [32m+[m
+ docs/PtW_Spa_Control_Handleiding.docx              |   Bin [31m0[m -> [32m8512485[m bytes
+ docs/PtW_Spa_Control_Handleiding.pdf               |   Bin [31m0[m -> [32m2484066[m bytes
+ docs/assets/ptw-logo.png                           |   Bin [31m0[m -> [32m32357[m bytes
+ docs/third-party/espressif__cjson_LICENSE.txt      |    20 [32m+[m
+ .../espressif__esp_delta_ota_LICENSE.txt           |   201 [32m+[m
+ .../espressif__esp_encrypted_img_LICENSE.txt       |   202 [32m+[m
+ .../espressif__esp_secure_cert_mgr_LICENSE.txt     |   202 [32m+[m
+ docs/third-party/espressif__led_strip_LICENSE.txt  |   202 [32m+[m
+ docs/third-party/espressif__mdns_LICENSE.txt       |   202 [32m+[m
+ firmware/CMakeLists.txt                            |    48 [32m+[m
+ firmware/README.md                                 |    16 [32m+[m
+ firmware/components/bestway_bus/CMakeLists.txt     |     5 [32m+[m
+ firmware/components/bestway_bus/bestway_bus.cpp    |  6145 [32m++++++++[m
+ .../components/bestway_bus/bestway_bus.cpp.bak2    |  2112 [32m+++[m
+ .../components/bestway_bus/bestway_bus.cpp.pcntbak |  6108 [32m++++++++[m
+ .../bestway_bus/bestway_bus.cpp.pcntgapbak         |  6129 [32m++++++++[m
+ .../components/bestway_bus/include/bestway_bus.h   |   469 [32m+[m
+ .../bestway_bus/include/bestway_bus.h.bak2         |   195 [32m+[m
+ .../bestway_bus/include/bestway_bus.h.pcntbak      |   506 [32m+[m
+ .../bestway_bus/include/bestway_bus.h.pcntgapbak   |   508 [32m+[m
+ .../bestway_bus/include/bestway_models.h           |   455 [32m+[m
+ firmware/components/mqtt_manager/CMakeLists.txt    |    17 [32m+[m
+ .../components/mqtt_manager/include/mqtt_manager.h |    72 [32m+[m
+ firmware/components/mqtt_manager/mqtt_manager.cpp  |  3455 [32m+++++[m
+ firmware/components/scheduler/CMakeLists.txt       |    10 [32m+[m
+ .../scheduler/include/scheduler_manager.h          |    78 [32m+[m
+ .../components/scheduler/scheduler_manager.cpp     |   534 [32m+[m
+ firmware/components/spa_core/CMakeLists.txt        |     5 [32m+[m
+ firmware/components/spa_core/include/spa_state.h   |    40 [32m+[m
+ firmware/components/spa_core/spa_state.cpp         |    53 [32m+[m
+ firmware/components/status_led/CMakeLists.txt      |     5 [32m+[m
+ firmware/components/status_led/idf_component.yml   |     3 [32m+[m
+ .../components/status_led/include/status_led.h     |    46 [32m+[m
+ firmware/components/status_led/status_led.cpp      |   221 [32m+[m
+ firmware/components/web_server/CMakeLists.txt      |    34 [32m+[m
+ .../components/web_server/include/web_server.h     |    27 [32m+[m
+ .../components/web_server/web/bestway_hwcfg.json   |    26 [32m+[m
+ firmware/components/web_server/web/css/app.css     |  2683 [32m++++[m
+ .../web/css/app.css.broken_20260924_134839         |  2595 [32m++++[m
+ .../web_server/web/icons/apple-touch-icon.png      |   Bin [31m0[m -> [32m5833[m bytes
+ .../components/web_server/web/icons/favicon-32.png |   Bin [31m0[m -> [32m765[m bytes
+ .../components/web_server/web/icons/icon-192.png   |   Bin [31m0[m -> [32m6339[m bytes
+ .../components/web_server/web/icons/icon-512.png   |   Bin [31m0[m -> [32m20942[m bytes
+ .../components/web_server/web/icons/icon-64.png    |   Bin [31m0[m -> [32m1887[m bytes
+ firmware/components/web_server/web/icons/icon.svg  |    13 [32m+[m
+ .../components/web_server/web/icons/matter-qr.png  |   Bin [31m0[m -> [32m549[m bytes
+ .../components/web_server/web/icons/ptw-logo.png   |   Bin [31m0[m -> [32m32357[m bytes
+ firmware/components/web_server/web/index.html      |   750 [32m+[m
+ firmware/components/web_server/web/js/app.js       |  5718 [32m++++++++[m
+ .../web/js/app.js.broken_20260924_134513           |  2866 [32m++++[m
+ .../web/js/app.js.broken_20260924_134839           |  2866 [32m++++[m
+ firmware/components/web_server/web/lang/de.json    |   699 [32m+[m
+ firmware/components/web_server/web/lang/en.json    |   699 [32m+[m
+ firmware/components/web_server/web/lang/fr.json    |   699 [32m+[m
+ .../components/web_server/web/lang/languages.json  |     6 [32m+[m
+ firmware/components/web_server/web/lang/nl.json    |   699 [32m+[m
+ firmware/components/web_server/web/manifest.json   |    38 [32m+[m
+ .../components/web_server/web/pages/dashboard.html |    22 [32m+[m
+ firmware/components/web_server/web/pages/mqtt.html |     4 [32m+[m
+ .../components/web_server/web/pages/settings.html  |    43 [32m+[m
+ firmware/components/web_server/web/pages/spa.html  |    16 [32m+[m
+ .../components/web_server/web/pages/system.html    |     8 [32m+[m
+ firmware/components/web_server/web/pages/wifi.html |     7 [32m+[m
+ firmware/components/web_server/web/sw.js           |    62 [32m+[m
+ firmware/components/web_server/web_server.cpp      |  6831 [32m+++++++++[m
+ firmware/dependencies.lock                         |   107 [32m+[m
+ firmware/main/CMakeLists.txt                       |     5 [32m+[m
+ firmware/main/Kconfig.projbuild                    |    11 [32m+[m
+ firmware/main/app_main.cpp                         |  2190 [32m+++[m
+ firmware/main/idf_component.yml                    |     3 [32m+[m
+ firmware/main/matter_commissioning.cpp             |   314 [32m+[m
+ firmware/main/matter_commissioning.h               |    12 [32m+[m
+ firmware/partitions.csv                            |     7 [32m+[m
+ firmware/sdkconfig                                 |  3401 [32m+++++[m
+ firmware/sdkconfig.defaults                        |    33 [32m+[m
+ firmware/tools/add_language.py                     |    14 [32m+[m
+ firmware/tools/check_i18n.py                       |   108 [32m+[m
+ firmware/tools/i18n_audit.py                       |    39 [32m+[m
+ home-assistant/README.md                           |    79 [32m+[m
+ .../layzspa_dashboard_3_layouts_7_talen.yaml       | 14038 [32m+++++++++++++++++++[m
+ home-assistant/layzspa_planner_popup_scripts.yaml  |   128 [32m+[m
+ .../packages/bestway_gebruik_vandaag_package.yaml  |    30 [32m+[m
+ .../packages/bestway_opwarming_package.yaml        |   149 [32m+[m
+ home-assistant/www/bestway-language-card.js        |   269 [32m+[m
+ tests/stubs/bestway_bus.h                          |     3 [32m+[m
+ tests/stubs/esp_log.h                              |     8 [32m+[m
+ tests/stubs/esp_timer.h                            |     3 [32m+[m
+ tests/stubs/nvs.h                                  |    20 [32m+[m
+ tests/test_handler.cpp                             |    25 [32m+[m
+ tests/test_scheduler.cpp                           |    37 [32m+[m
+ tests/test_web.cjs                                 |    14 [32m+[m
+ tools/verify.sh                                    |    29 [32m+[m
+ 103 files changed, 77274 insertions(+), 2 deletions(-)

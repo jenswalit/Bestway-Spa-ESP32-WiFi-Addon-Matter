@@ -1,0 +1,17 @@
+idf_component_register(
+    SRCS
+        "mqtt_manager.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        nvs_flash
+        mqtt
+        esp_wifi
+        esp_netif
+        esp_timer
+        esp_app_format
+        spa_core
+        bestway_bus
+        scheduler
+        json
+)

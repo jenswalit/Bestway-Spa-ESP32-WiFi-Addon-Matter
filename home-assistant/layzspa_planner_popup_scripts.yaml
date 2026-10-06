@@ -1,0 +1,128 @@
+# ============================================================================
+# Lay-Z-Spa planner scripts for Home Assistant
+# Add these top-level entries to scripts.yaml, then reload Scripts.
+# Browser Mod forwards the popup form fields to these scripts.
+# ============================================================================
+
+layzspa_planner_add:
+  alias: Lay-Z-Spa planner - toevoegen
+  mode: queued
+  max: 10
+  fields:
+    enabled:
+      required: true
+    time:
+      required: true
+    days:
+      required: true
+    planner_action:
+      required: true
+    value:
+      required: false
+  sequence:
+    - variables:
+        days_mask: >-
+          {% set bits = {'ma':2,'di':4,'wo':8,'do':16,'vr':32,'za':64,'zo':1} %}
+          {% set ns = namespace(mask=0) %}
+          {% for d in days | default([]) %}
+            {% set ns.mask = ns.mask + bits.get(d, 0) %}
+          {% endfor %}
+          {{ ns.mask }}
+        hour_value: "{{ (time | string).split(':')[0] | int(0) }}"
+        minute_value: "{{ (time | string).split(':')[1] | int(0) }}"
+        action_value: "{{ planner_action | int(0) }}"
+        temp_value: >-
+          {% if (planner_action | int(0)) == 8 %}
+            {{ value | int(38) }}
+          {% else %}
+            0
+          {% endif %}
+    - condition: template
+      value_template: "{{ (days_mask | int(0)) > 0 }}"
+    - action: mqtt.publish
+      data:
+        topic: layzspa/planner/command
+        qos: 0
+        retain: false
+        payload: >-
+          {{ {
+            'op': 'add',
+            'enabled': enabled | bool,
+            'daysMask': days_mask | int,
+            'hour': hour_value | int,
+            'minute': minute_value | int,
+            'action': action_value | int,
+            'value': temp_value | int
+          } | to_json }}
+
+layzspa_planner_update:
+  alias: Lay-Z-Spa planner - wijzigen
+  mode: queued
+  max: 10
+  fields:
+    id:
+      required: true
+    enabled:
+      required: true
+    time:
+      required: true
+    days:
+      required: true
+    planner_action:
+      required: true
+    value:
+      required: false
+  sequence:
+    - variables:
+        days_mask: >-
+          {% set bits = {'ma':2,'di':4,'wo':8,'do':16,'vr':32,'za':64,'zo':1} %}
+          {% set ns = namespace(mask=0) %}
+          {% for d in days | default([]) %}
+            {% set ns.mask = ns.mask + bits.get(d, 0) %}
+          {% endfor %}
+          {{ ns.mask }}
+        hour_value: "{{ (time | string).split(':')[0] | int(0) }}"
+        minute_value: "{{ (time | string).split(':')[1] | int(0) }}"
+        action_value: "{{ planner_action | int(0) }}"
+        temp_value: >-
+          {% if (planner_action | int(0)) == 8 %}
+            {{ value | int(38) }}
+          {% else %}
+            0
+          {% endif %}
+    - condition: template
+      value_template: "{{ (id | int(0)) > 0 and (days_mask | int(0)) > 0 }}"
+    - action: mqtt.publish
+      data:
+        topic: layzspa/planner/command
+        qos: 0
+        retain: false
+        payload: >-
+          {{ {
+            'op': 'update',
+            'id': id | int,
+            'enabled': enabled | bool,
+            'daysMask': days_mask | int,
+            'hour': hour_value | int,
+            'minute': minute_value | int,
+            'action': action_value | int,
+            'value': temp_value | int
+          } | to_json }}
+
+layzspa_planner_delete:
+  alias: Lay-Z-Spa planner - verwijderen
+  mode: queued
+  max: 10
+  fields:
+    id:
+      required: true
+  sequence:
+    - condition: template
+      value_template: "{{ (id | int(0)) > 0 }}"
+    - action: mqtt.publish
+      data:
+        topic: layzspa/planner/command
+        qos: 0
+        retain: false
+        payload: >-
+          {{ {'op':'delete', 'id': id | int} | to_json }}

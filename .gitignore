@@ -1,0 +1,38 @@
+# ESP-IDF build output and local editor files
+build/
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+*.log
+*.tmp
+*.before_*
+*.bak
+sdkconfig.old
+backups/
+# Device secrets and local configuration exports
+.env
+.env.*
+secrets.yaml
+secrets.*.yaml
+layzspa-backup-*.json
+layzspa-diagnostics-*.txt
+*.pem
+*.key
+# Locally built firmware and test programs
+*.elf
+*.map
+*.uf2
+/firmware/build/
+/dist/
+/tests/out/
+# sdkconfig is deliberately tracked as the confirmed working build baseline.
+# Do not commit a future sdkconfig containing personal credentials.
+
+# Generated registry downloads: versions stay in dependencies.lock
+/firmware/managed_components/
+
+# Build/download archives and module exports
+*.bin
+*.zip
+matter-credentials*.json

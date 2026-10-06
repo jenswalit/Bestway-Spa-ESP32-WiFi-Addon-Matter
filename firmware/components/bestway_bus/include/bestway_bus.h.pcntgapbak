@@ -1,0 +1,508 @@
+#pragma once
+#include <cstdint>
+#include "freertos/FreeRTOS.h"
+#include "bestway_models.h"
+#include <driver/pulse_cnt.h>
+
+class BestwayBus {
+public:
+    struct ConnectorTestPair {
+        const char *name = "";
+        uint8_t cio_pin = 0;
+        uint8_t dsp_pin = 0;
+        int forward_errors = 0;
+        int reverse_errors = 0;
+        bool applicable = false;
+        bool pass = false;
+    };
+
+    struct ConnectorTestResult {
+        ConnectorTestPair pairs[3];
+        bool overall_pass = false;
+        bool supported = false;
+    };
+    enum class Mode : uint8_t {
+        Simulation,
+        Hardware,
+    };
+
+    void begin();
+    void loop();
+
+    bool is_connected() const;
+    Mode mode() const;
+    const char *mode_name() const;
+    uint32_t state_version() const;
+
+    uint8_t type1_debug_payload7() const {
+        return type1_cio_prev_payload_[7];
+    }
+
+    uint8_t type1_debug_payload9() const {
+        return type1_cio_prev_payload_[9];
+    }
+
+    uint8_t type1_debug_brightness() const {
+        return type1_dsp_brightness_;
+    }
+
+    uint32_t type1_debug_dsp_upload_count() const {
+        return type1_dsp_upload_count_;
+    }
+
+    uint8_t type1_debug_dsp_payload(size_t index) const {
+        return index < 11 ? type1_dsp_payload_[index] : 0;
+    }
+
+    BestwayModel model() const;
+    const BestwayModelInfo &model_info() const;
+    const char *model_name() const;
+    const char *protocol_name() const;
+    bool has_air() const;
+    bool has_jets() const;
+
+    // Godmode bestaat alleen voor het 4-wire protocol.
+    // false = transparante/pass-through werking
+    // true  = ESP bestuurt de 4-wire pompstatus
+    bool godmode() const;
+    void set_godmode(bool enabled);
+
+    // Alleen relevant voor 4-wire Godmode.
+    // true  = indien beschikbaar beide heatertrappen gebruiken
+    // false = alleen heatertrap 1 gebruiken
+    bool godmode_full_power() const;
+    void set_godmode_full_power(bool enabled);
+
+    void set_power(bool on);
+    void set_filter(bool on);
+    void set_bubbles(bool on);
+    void set_jets(bool on);
+    void set_heater(bool on);
+    void set_unit(bool fahrenheit);
+    void set_lock(bool locked);
+    void press_timer();
+    void step_target(bool up);
+    void set_target_temperature(int target_c);
+
+    // Benchtest: CIO en DSP connector met elkaar verbinden,
+    // pomp losgekoppeld en ESP alleen via USB voeden.
+    ConnectorTestResult run_connector_test();
+
+private:
+    struct PendingBool {
+        bool active = false;
+        bool value = false;
+        uint64_t due_ms = 0;
+    };
+
+    bool connected_ = false;
+    bool connector_test_active_ = false;
+    Mode mode_ = Mode::Simulation;
+
+    uint8_t hw_state_index_ = 0;
+
+    // 4-wire Godmode, gelijk aan het gedrag van Spa Control v3.2.6.
+    // Standaard UIT: de originele pomp/display-besturing blijft leidend.
+    bool godmode_ = false;
+
+    // v3.2.6 Full Power:
+    // true  = tweede heatertrap toestaan indien het model heat2 heeft.
+    // false = alleen de eerste heatertrap gebruiken.
+    //
+    // Standaard AAN zodat bestaand v5-gedrag behouden blijft.
+    bool godmode_full_power_ = true;
+
+    // 4-wire Godmode heaterregeling, gebaseerd op Spa Control v3.2.6.
+    // stage: 0 = uit, 1 = eerste element, 2 = beide elementen.
+    uint8_t godmode_heater_stage_ = 0;
+    uint64_t godmode_heater2_due_ms_ = 0;
+
+    // Wanneer de pomp tijdens verwarmen wordt uitgezet:
+    // eerst heater uit, daarna 5 seconden naloop.
+    bool godmode_pump_off_pending_ = false;
+    uint64_t godmode_pump_off_due_ms_ = 0;
+
+    // v3.2.6 hysterese:
+    // verwarmen tot boven target, daarna pas weer starten op target-1.
+    bool godmode_hysteresis_ = false;
+
+    // Veilige standaard zolang hardware-selectie nog niet uit configuratie komt.
+    BestwayModel model_ = BestwayModel::PRE2021;
+    uint32_t state_version_ = 0;
+    uint64_t last_packet_ms_ = 0;
+    uint64_t last_temp_step_ms_ = 0;
+
+    uint8_t last_cio_frame_[7] = {};
+    uint8_t last_dsp_frame_[7] = {};
+    uint8_t to_cio_frame_[7] = {};
+    bool have_cio_frame_ = false;
+    bool have_dsp_frame_ = false;
+    bool have_to_cio_frame_ = false;
+
+    bool dsp_bubbles_ = false;
+    bool dsp_pump_ = false;
+    bool dsp_jets_ = false;
+    bool dsp_heat_ = false;
+    bool have_dsp_state_ = false;
+
+    bool pending_pump_ = false;
+    bool pending_bubbles_ = false;
+    bool pending_jets_ = false;
+
+    bool target_pump_ = false;
+    bool target_bubbles_ = false;
+    bool target_jets_ = false;
+
+    // 6-wire Type1 CIO protocol state
+    volatile int type1_cio_byte_count_ = 0;
+    volatile int type1_cio_bit_count_ = 0;
+    volatile int type1_cio_cmd_matches_ = 0;
+    volatile int type1_cio_send_bit_ = 8;
+
+    volatile uint8_t type1_cio_received_byte_ = 0;
+    volatile uint8_t type1_cio_brightness_ = 7;
+    volatile uint8_t type1_cio_payload_[11] = {};
+    
+    // Complete ISR-snapshot voor verwerking buiten de interrupt.
+    volatile uint8_t type1_cio_ready_payload_[11] = {};
+    volatile uint8_t type1_cio_ready_brightness_ = 7;
+    volatile uint8_t type1_cio_ready_packet_error_ = 0;
+
+    // Detail van het packet-einde waarop de CIO fout ontstond.
+    volatile int type1_cio_error_byte_count_ = 0;
+    volatile int type1_cio_error_bit_count_ = 0;
+    volatile int type1_cio_error_cmd_matches_ = 0;
+    volatile uint8_t type1_cio_error_received_byte_ = 0;
+    volatile bool type1_cio_error_was_output_ = false;
+
+    // Zelfde foutdetail in de complete ready-snapshot.
+    volatile int type1_cio_ready_error_byte_count_ = 0;
+    volatile int type1_cio_ready_error_bit_count_ = 0;
+    volatile int type1_cio_ready_error_cmd_matches_ = 0;
+    volatile uint8_t type1_cio_ready_error_received_byte_ = 0;
+    volatile bool type1_cio_ready_error_was_output_ = false;
+    volatile uint64_t type1_cio_ready_error_cs_us_ = 0;
+    volatile uint64_t type1_cio_ready_error_last_clk_us_ = 0;
+    volatile int type1_cio_ready_error_clk_level_ = -1;
+    volatile int type1_cio_ready_error_data_level_ = -1;
+    volatile uint32_t type1_cio_ready_error_intr_status_ = 0;
+    volatile bool type1_cio_ready_error_clk_pending_ = false;
+
+    volatile uint64_t type1_cio_last_clk_us_ = 0;
+    volatile uint64_t type1_cio_error_cs_us_ = 0;
+    volatile uint64_t type1_cio_error_last_clk_us_ = 0;
+    volatile int type1_cio_error_clk_level_ = -1;
+    volatile int type1_cio_error_data_level_ = -1;
+    volatile uint32_t type1_cio_error_intr_status_ = 0;
+    volatile bool type1_cio_error_clk_pending_ = false;
+
+    volatile uint16_t type1_cio_rx_rising_count_ = 0;
+    volatile uint16_t type1_cio_error_rx_rising_count_ = 0;
+    volatile uint16_t type1_cio_ready_error_rx_rising_count_ = 0;
+    volatile int type1_cio_error_pcnt_count_ = -1;
+    volatile int type1_cio_ready_error_pcnt_count_ = -1;
+
+    volatile uint32_t type1_cio_repeat_cs_low_count_ = 0;
+    volatile uint16_t type1_cio_last_repeat_cs_low_byte_count_ = 0;
+    volatile uint8_t type1_cio_last_repeat_cs_low_bit_count_ = 0;
+
+    volatile uint32_t type1_cio_cs_low_count_ = 0;
+    volatile uint32_t type1_cio_cs_high_count_ = 0;
+
+    pcnt_unit_handle_t type1_pcnt_unit_ = nullptr;
+    pcnt_channel_handle_t type1_pcnt_channel_ = nullptr;
+    volatile int type1_pcnt_last_count_ = -1;
+
+    // Beschermt overdracht van complete CIO snapshot tussen ISR en task.
+    portMUX_TYPE type1_cio_mux_ = portMUX_INITIALIZER_UNLOCKED;
+
+uint8_t type1_cio_prev_payload_[11] = {};
+
+    volatile uint8_t type1_cio_packet_error_ = 0;
+    volatile bool type1_cio_data_is_output_ = false;
+    volatile bool type1_cio_packet_active_ = false;
+    volatile bool type1_cio_new_packet_ = false;
+
+    // Tijdelijke remote Type1 busdiagnostiek.
+    volatile uint32_t type1_debug_42_requests_ = 0;
+    volatile uint32_t type1_debug_responses_started_ = 0;
+    volatile uint32_t type1_debug_bits_sent_ = 0;
+    volatile uint32_t type1_debug_responses_complete_ = 0;
+    volatile uint16_t type1_debug_last_button_code_ = 0;
+
+    // Detail van de werkelijk beantwoorde 0x42 button requests.
+    volatile uint16_t type1_debug_response_code_ = 0;
+
+    // Complete buttoncode voor één 0x42-transactie.
+    // Wordt bij ontvangst van 0x42 één keer vastgelegd zodat
+    // alle 16 bits gegarandeerd uit hetzelfde woord komen.
+    volatile uint16_t type1_cio_tx_button_code_ = 0;
+    volatile bool type1_debug_response_active_ = false;
+
+    volatile uint32_t type1_debug_active_started_ = 0;
+    volatile uint32_t type1_debug_active_complete_ = 0;
+    volatile uint32_t type1_debug_nobtn_started_ = 0;
+    volatile uint32_t type1_debug_nobtn_complete_ = 0;
+
+    uint16_t type1_debug_nobtn_code_ = 0;
+
+    // Beschermt de complete CIO ready-snapshot tussen ISR en task.
+
+    volatile uint16_t type1_cio_button_code_ = 0;
+
+    enum class Type1CapturePhase : uint8_t {
+        ReadTemperature = 0,
+        Uncertain,
+        ReadTarget
+    };
+
+    Type1CapturePhase type1_capture_phase_ =
+        Type1CapturePhase::ReadTemperature;
+
+    uint64_t type1_button_release_ms_ = 0;
+
+    // false = Celsius, true = Fahrenheit
+    bool type1_unit_fahrenheit_ = false;
+
+    // 6-wire Type1 DSP protocol state
+    uint8_t type1_dsp_payload_[11] = {};
+    uint8_t type1_dsp_raw_button_[2] = {};
+
+    uint16_t type1_dsp_button_code_ = 0;
+
+    // Tijdelijke virtuele knopdruk richting pomp.
+    bool type1_remote_button_active_ = false;
+    uint16_t type1_remote_button_code_ = 0;
+    uint64_t type1_remote_button_until_ms_ = 0;
+
+    BestwayButton type1_remote_button_ =
+        BestwayButton::NoButton;
+
+    bool type1_remote_wait_for_state_ = false;
+    bool type1_remote_target_value_ = false;
+
+    enum class Type1RemoteSequence : uint8_t {
+        None = 0,
+        HeatEnable,
+        HeatDisable
+    };
+
+    Type1RemoteSequence type1_remote_sequence_ =
+        Type1RemoteSequence::None;
+
+    uint8_t type1_remote_sequence_step_ = 0;
+
+    bool type1_target_sequence_active_ = false;
+    int type1_target_sequence_target_c_ = 0;
+    uint8_t type1_target_attempts_ = 0;
+
+    // Laatste doelwaarde zoals werkelijk op het Type1-display stond.
+    // In Celsius-modus is dit °C, in Fahrenheit-modus °F.
+    int type1_target_display_value_ = -1;
+
+    bool type1_target_release_active_ = false;
+    uint64_t type1_target_release_until_ms_ = 0;
+
+    // Tijdens de v4-style target release sturen we bewust NOBTN.
+    // Zo kan een fysieke displayknop de remote targetsequence
+    // gedurende de 400 ms release niet verstoren.
+    bool type1_target_force_nobtn_ = false;
+
+    uint64_t type1_dsp_last_refresh_ms_ = 0;
+    uint64_t type1_dsp_last_button_ms_ = 0;
+    uint32_t type1_dsp_upload_count_ = 0;
+
+    uint8_t type1_dsp_brightness_ = 7;
+
+    // Type1 display-audio via LEDC
+    bool type1_audio_ready_ = false;
+    int type1_audio_frequency_hz_ = 0;
+
+    // Oude v4 temperatuur UP/DOWN sweep.
+    bool type1_audio_sweep_active_ = false;
+    bool type1_audio_sweep_up_ = false;
+    uint64_t type1_audio_sweep_started_us_ = 0;
+
+    // Korte standaard piep voor alle overige knoppen.
+    bool type1_audio_beep_active_ = false;
+    uint64_t type1_audio_beep_until_us_ = 0;
+
+    // Nodig om slechts één geluid per fysieke knopdruk te starten.
+    BestwayButton type1_last_physical_button_ =
+        BestwayButton::NoButton;
+
+    void type1_audio_set_frequency(int frequency_hz);
+    void type1_audio_start_temp_sweep(bool up);
+    void type1_audio_start_beep();
+    void type1_audio_loop();
+
+    // GPIO-configuratie uit de Hardware-pagina.
+    // Volgorde: CIO1, CIO2, CIO3, DSP1, DSP2, DSP3, audio, temp.
+    uint8_t pins_[8] = {23, 22, 21, 20, 19, 18, 11, 0};
+
+    PendingBool power_;
+    PendingBool filter_;
+    PendingBool bubbles_;
+    PendingBool jets_;
+    PendingBool heater_;
+
+    void queue(PendingBool &pending, bool value, const char *name);
+    bool apply_pending(PendingBool &pending, bool &target, const char *name, uint64_t now_ms);
+    void bump_version();
+    void simulation_loop(uint64_t now_ms);
+    void hardware_loop(uint64_t now_ms);
+
+    void apply_4wire_toggle(Bestway4WireToggle toggle);
+    bool sync_4wire_state_from_dsp(bool bubbles, bool jets, bool pump, bool heat);
+
+    // Volledige 4-wire Godmode regeling uit v3.2.6.
+    void godmode_4wire_control(uint64_t now_ms);
+
+    bool build_4wire_cio_frame();
+    bool init_uart4wire();
+    void uart4wire_loop(uint64_t now_ms);
+
+    // 6-wire Type2 CIO protocol state
+    volatile int type2_cio_byte_count_ = 0;
+    volatile int type2_cio_bit_count_ = 0;
+    volatile uint8_t type2_cio_received_cmd_ = 0;
+    volatile uint8_t type2_cio_brightness_ = 7;
+    volatile uint8_t type2_cio_payload_[5] = {};
+    volatile bool type2_cio_packet_active_ = false;
+
+    // Complete Type2 ISR-snapshot voor verwerking buiten de interrupt.
+    volatile uint8_t type2_cio_ready_payload_[5] = {};
+    volatile uint8_t type2_cio_ready_brightness_ = 7;
+    volatile bool type2_cio_new_packet_ = false;
+    portMUX_TYPE type2_cio_mux_ = portMUX_INITIALIZER_UNLOCKED;
+
+    uint8_t type2_cio_prev_payload_[5] = {};
+
+    // Actuele fysieke of tijdelijke remote Type2-knopcode richting pomp.
+    uint16_t type2_cio_button_code_ = 0;
+
+    enum class Type2CapturePhase : uint8_t {
+        ReadTemperature = 0,
+        Uncertain,
+        ReadTarget
+    };
+
+    Type2CapturePhase type2_capture_phase_ =
+        Type2CapturePhase::ReadTemperature;
+
+    uint64_t type2_button_release_ms_ = 0;
+    bool type2_unit_fahrenheit_ = false;
+
+    // Absolute Type2 doeltemperatuurregeling via echte UP/DOWN-knoppen.
+    bool type2_target_sequence_active_ = false;
+    int type2_target_sequence_target_c_ = 0;
+
+    // Laatste target zoals werkelijk op het pompdisplay stond.
+    // In C-modus °C, in F-modus °F.
+    int type2_target_display_value_ = -1;
+
+    bool type2_target_step_in_progress_ = false;
+    bool type2_target_release_active_ = false;
+    uint64_t type2_target_release_until_ms_ = 0;
+
+    // 6-wire Type2 DSP protocol state.
+    // De 5 bytes van de pomp worden transparant naar het display gestuurd.
+    uint8_t type2_dsp_payload_[5] = {};
+    uint8_t type2_dsp_brightness_ = 7;
+    uint64_t type2_dsp_last_refresh_ms_ = 0;
+
+    // Fysieke knop op het originele Type2-display.
+    uint64_t type2_dsp_last_button_ms_ = 0;
+    uint16_t type2_dsp_button_code_ = 0;
+
+    BestwayButton type2_dsp_old_button_ =
+        BestwayButton::NoButton;
+
+    BestwayButton type2_dsp_prev_button_ =
+        BestwayButton::NoButton;
+
+    // Tijdelijke virtuele Type2-knop richting pomp.
+    bool type2_remote_button_active_ = false;
+    uint16_t type2_remote_button_code_ = 0;
+    uint64_t type2_remote_button_until_ms_ = 0;
+
+    BestwayButton type2_remote_button_ =
+        BestwayButton::NoButton;
+
+    bool type2_remote_wait_for_state_ = false;
+    bool type2_remote_target_value_ = false;
+
+    // Voor Type2 moeten normale functies eerst ontgrendelen,
+    // zoals CIO_6W::unlock() in de oude v4.
+    bool type2_remote_sequence_active_ = false;
+    uint8_t type2_remote_sequence_step_ = 0;
+
+    BestwayButton type2_remote_sequence_button_ =
+        BestwayButton::NoButton;
+
+    bool type2_remote_sequence_target_value_ = false;
+
+    bool type2_remote_sequence_momentary_ = false;
+    uint32_t type2_remote_sequence_duration_ms_ = 100;
+
+    static void type2_cio_ld_isr(void *arg);
+    static void type2_cio_clk_isr(void *arg);
+    void type2_cio_handle_ld_isr();
+    void type2_cio_handle_clk_isr();
+    bool init_type2_cio();
+    void process_type2_cio_packet();
+    char decode_type2_char(uint8_t value) const;
+
+    // 6-wire Type2 DSP interface
+    bool init_type2_dsp();
+    void type2_dsp_send_bits(uint32_t bits, int count);
+    void type2_dsp_upload_payload(uint64_t now_ms);
+    void type2_dsp_poll_button(uint64_t now_ms);
+
+    void type2_remote_press(
+        BestwayButton button,
+        uint32_t duration_ms);
+
+    void type2_remote_press_state(
+        BestwayButton button,
+        bool target_value,
+        uint32_t max_duration_ms = 5000);
+
+    void type2_remote_button_loop(uint64_t now_ms);
+
+    void type2_start_state_action(
+        BestwayButton button,
+        bool target_value);
+
+    void type2_start_momentary_action(
+        BestwayButton button,
+        uint32_t duration_ms);
+
+    void type2_remote_sequence_loop(uint64_t now_ms);
+    void type2_target_sequence_loop(uint64_t now_ms);
+
+    // 6-wire Type1 CIO ISR interface
+    static void type1_cio_cs_isr(void *arg);
+    static void type1_cio_clk_isr(void *arg);
+    void type1_cio_handle_cs_isr();
+    void type1_cio_handle_clk_isr();
+    bool init_type1_cio();
+    void process_type1_cio_packet();
+    char decode_type1_char(uint8_t value) const;
+
+    void type1_dsp_send_bits(uint32_t bits, int count);
+    uint16_t type1_dsp_receive_bits();
+    bool init_type1_dsp();
+    void type1_dsp_upload_payload(uint64_t now_ms);
+    void type1_dsp_poll_button(uint64_t now_ms);
+    void type1_remote_press(BestwayButton button, uint32_t duration_ms);
+    void type1_remote_press_state(
+        BestwayButton button,
+        bool target_value,
+        uint32_t max_duration_ms = 5000);
+    void type1_remote_button_loop(uint64_t now_ms);
+    void type1_remote_sequence_loop(uint64_t now_ms);
+    void type1_target_sequence_loop(uint64_t now_ms);
+};
+
+extern BestwayBus bestway_bus;

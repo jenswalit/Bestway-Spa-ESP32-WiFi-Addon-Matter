@@ -1,0 +1,10 @@
+idf_component_register(
+    SRCS
+        "scheduler_manager.cpp"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        bestway_bus
+        nvs_flash
+        esp_timer
+)
