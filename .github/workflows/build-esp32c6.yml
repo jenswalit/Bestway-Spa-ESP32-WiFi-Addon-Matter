@@ -29,7 +29,6 @@ jobs:
       IDF_VERSION: v5.5.5
       ESP_MATTER_COMMIT: ff9f07ecb0bf01d7a2db5428149ef16bf601774c
       CHIP_COMMIT: 539342f32d5f4dc93761c2f9325afe29270068f1
-      IDF_CCACHE_ENABLE: '1'
 
     steps:
       - name: Check out project
@@ -41,6 +40,15 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+
+      - name: Reclaim disk space on temporary GitHub runner
+        run: |
+          df -h /
+          # These preinstalled SDKs are unused by the ESP32-C6 build.
+          # Only remove fixed paths on the disposable hosted runner.
+          sudo rm -rf -- /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt-get clean
+          df -h /
 
       - name: Install Linux build prerequisites
         run: |
@@ -92,9 +100,10 @@ jobs:
           sdk_root="$RUNNER_TEMP/bestway-sdk"
           source "$sdk_root/esp-idf/export.sh"
           source "$sdk_root/esp-matter/export.sh"
+          df -h /
           cd "$GITHUB_WORKSPACE/firmware"
           grep -q '^CONFIG_IDF_TARGET="esp32c6"$' sdkconfig
-          idf.py build
+          idf.py --no-ccache build
           test -s build/Bestway_Matter_v5.bin
 
       - name: Prepare OTA download and build metadata
