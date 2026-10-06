@@ -2,6 +2,8 @@
 
 ## 2026-10-06
 
+- Engelse gebruikershandleiding toegevoegd, inclusief inhoudsopgave, screenshots en montagefoto's.
+
 - Documentatie gericht op installatie en gebruik door nieuwe gebruikers.
 - Webplanner: een dag uitschakelen laat de overige dagen actief.
 - Een uitgeschakelde dag blijft als aparte plannerregel zichtbaar.

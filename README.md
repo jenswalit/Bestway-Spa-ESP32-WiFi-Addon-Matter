@@ -25,7 +25,8 @@ rechtstreeks op een ESP flashen. Zie de [bouwinstructies](docs/BUILD_NL.md) als 
 zelf wilt bouwen.
 
 Heb je een werkende module? Begin met de
-**[gebruikershandleiding (PDF)](docs/PtW_Spa_Control_Handleiding.pdf)**.
+**[gebruikershandleiding (Nederlands)](docs/PtW_Spa_Control_Handleiding.pdf)**
+of de **[Engelse handleiding](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
 Die beschrijft stap voor stap:
 
 1. De module aansluiten op een geschikte pomp.
@@ -51,7 +52,7 @@ kun je ook zonder Home Assistant gebruiken.
 
 | Wat wil je doen? | Lees dit |
 |---|---|
-| Module installeren en alle pagina's leren gebruiken | [Gebruikershandleiding](docs/PtW_Spa_Control_Handleiding.pdf) |
+| Module installeren en alle pagina's leren gebruiken | [Nederlands](docs/PtW_Spa_Control_Handleiding.pdf) / [English](docs/PtW_Spa_Control_User_Manual_EN.pdf) |
 | Aansluitingen controleren | [Hardware en aansluiting](docs/HARDWARE_NL.md) |
 | Eerste of extra Matter-koppeling maken | [Matter koppelen](docs/MATTER_NL.md) |
 | Home Assistant-dashboard installeren | [Home Assistant](home-assistant/README.md) |

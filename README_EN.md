@@ -24,7 +24,8 @@ prebuilt firmware is available. A GitHub source ZIP cannot be flashed directly
 onto an ESP. See the [build instructions](docs/BUILD_NL.md) to build from source.
 
 Once your module is running, start with the
-**[user manual (PDF, Dutch)](docs/PtW_Spa_Control_Handleiding.pdf)**. It explains:
+**[user manual (PDF, English)](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
+A [Dutch version](docs/PtW_Spa_Control_Handleiding.pdf) is also available. It explains:
 
 1. Connecting the module to a compatible pump.
 2. Connecting to the module's WiFi access point and configuring your home WiFi.
@@ -47,11 +48,11 @@ work without Home Assistant.
 
 ## Guides
 
-The linked detailed guides are currently in Dutch.
+The user manual is available in English and Dutch. The other linked guides are currently in Dutch.
 
 | What would you like to do? | Read this |
 |---|---|
-| Install the module and learn how to use its pages | [User manual](docs/PtW_Spa_Control_Handleiding.pdf) |
+| Install the module and learn how to use its pages | [English](docs/PtW_Spa_Control_User_Manual_EN.pdf) / [Dutch](docs/PtW_Spa_Control_Handleiding.pdf) |
 | Check the connections | [Hardware and wiring](docs/HARDWARE_NL.md) |
 | Make a first or additional Matter connection | [Matter pairing](docs/MATTER_NL.md) |
 | Install the Home Assistant dashboard | [Home Assistant](home-assistant/README.md) |
