@@ -1,5 +1,7 @@
 # Matter koppelen
 
+[English](MATTER_EN.md)
+
 De module gebruikt Matter via WiFi. De setupgegevens worden bij de eerste
 initialisatie van een nieuwe module aangemaakt en bewaard. OTA hoort deze
 credentials en de bestaande fabrics te behouden.

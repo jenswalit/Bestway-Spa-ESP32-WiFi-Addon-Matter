@@ -1,5 +1,7 @@
 # ESP32-C6 firmware
 
+[English](README_EN.md)
+
 Dit is de werkende broncode met de op 6 oktober 2026 bevestigde planner-dagfix.
 
 Bouwen vanuit deze map, met jouw bestaande ESP-IDF en ESP-Matter omgeving:

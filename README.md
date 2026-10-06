@@ -17,7 +17,7 @@ Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.
 | Een module waarop de firmware al staat | Sluit de module aan en volg de gebruikershandleiding. Zelf bouwen is niet nodig. |
 | Een lege module en geschikte kant-en-klare firmware | Flash eerst de firmware via USB. Zelf bouwen is niet nodig als er een passend firmwarebestand beschikbaar is. |
 | Een lege module en alleen de broncode | Installeer de bouwomgeving, bouw de firmware en flash de module via USB. |
-| Je wilt de module zelf maken | Bekijk de hardware-informatie. Schema, Gerber-bestanden en een complete onderdelenlijst worden later toegevoegd. |
+| Je wilt de module zelf maken | Bekijk de hardware-informatie en het V2M-hardwarepakket. Controleer de verificatiestatus vóór bestellen; de complete assemblage-onderdelenlijst wordt nog afgerond. |
 
 Deze repository bevat broncode. Dat betekent niet automatisch dat er ook een
 kant-en-klaar firmwarebestand beschikbaar is. Een GitHub-broncode-ZIP kun je niet
@@ -55,6 +55,7 @@ kun je ook zonder Home Assistant gebruiken.
 | Module installeren en alle pagina's leren gebruiken | [Nederlands](docs/PtW_Spa_Control_Handleiding.pdf) / [English](docs/PtW_Spa_Control_User_Manual_EN.pdf) |
 | Aansluitingen controleren | [Hardware en aansluiting](docs/HARDWARE_NL.md) |
 | Eerste of extra Matter-koppeling maken | [Matter koppelen](docs/MATTER_NL.md) |
+| Spa Control via MQTT koppelen | [MQTT instellen](docs/MQTT_NL.md) / [English](docs/MQTT_EN.md) |
 | Home Assistant-dashboard installeren | [Home Assistant](home-assistant/README.md) |
 | Zelf firmware bouwen | [Bouwinstructies voor ontwikkelaars](docs/BUILD_NL.md) |
 

@@ -1,5 +1,7 @@
 # Firmware bouwen — voor ontwikkelaars
 
+[English](BUILD_EN.md)
+
 Een geprogrammeerde module gebruiken? Volg de [gebruikershandleiding](PtW_Spa_Control_Handleiding.pdf). Bouwen is daarvoor niet nodig.
 
 ## Vereiste bouwomgeving

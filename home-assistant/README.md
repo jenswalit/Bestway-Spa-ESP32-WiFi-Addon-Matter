@@ -1,5 +1,7 @@
 # Home Assistant spa-dashboard
 
+[English](README_EN.md)
+
 Installeer hiermee het spa-dashboard met drie layouts en zeven talen.
 De firmware wordt via MQTT verbonden met HA. Matter kan daarnaast actief blijven.
 
@@ -75,3 +77,7 @@ De opwarmschatting heeft vergelijkbare meetperiodes nodig en is geen gegarandeer
 klaar-tijd. Dagtotalen worden in HA berekend en kunnen afwijken van de ESP-tellers.
 Als jouw weerentiteit anders heet, pas de verwijzing in het package bewust aan.
 Maak geen dubbele sensoren als de bestaande packages al actief zijn.
+
+## MQTT aansluiten
+
+Zie [de korte MQTT-handleiding](../docs/MQTT_NL.md) voor Mosquitto, de HA-integratie en de instellingen in Spa Control.

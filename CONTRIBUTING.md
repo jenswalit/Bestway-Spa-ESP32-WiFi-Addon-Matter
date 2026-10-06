@@ -1,5 +1,7 @@
 # Werken aan dit project
 
+[English](CONTRIBUTING_EN.md)
+
 Maak kleine, gerichte wijzigingen. Benoem het probleem, de wijziging
 en de uitgevoerde controles in een pull request. Pas SDK, bus en UI niet tegelijk
 zonder concrete noodzaak aan.

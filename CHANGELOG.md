@@ -1,5 +1,7 @@
 # Wijzigingen
 
+[English](CHANGELOG_EN.md)
+
 ## 2026-10-06
 
 - Engelse gebruikershandleiding toegevoegd, inclusief inhoudsopgave, screenshots en montagefoto's.

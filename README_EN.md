@@ -17,11 +17,11 @@ This is an independent hobby project, not an official Bestway WiFi module.
 | A module with the firmware already installed | Connect the module and follow the user manual. You do not need to build the firmware yourself. |
 | A blank module and compatible prebuilt firmware | Flash the firmware over USB first. You do not need to build it yourself if a suitable firmware file is available. |
 | A blank module and only the source code | Install the build environment, build the firmware and flash the module over USB. |
-| You want to build the hardware yourself | Read the hardware information. Schematics, Gerber files and a complete parts list will be added later. |
+| You want to build the hardware yourself | Read the hardware information and the V2M hardware package. Check its verification status before ordering; the complete assembly parts list is still being finalized. |
 
 This repository contains source code. This does not automatically mean that
 prebuilt firmware is available. A GitHub source ZIP cannot be flashed directly
-onto an ESP. See the [build instructions](docs/BUILD_NL.md) to build from source.
+onto an ESP. See the [build instructions](docs/BUILD_EN.md) to build from source.
 
 Once your module is running, start with the
 **[user manual (PDF, English)](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
@@ -48,15 +48,16 @@ work without Home Assistant.
 
 ## Guides
 
-The user manual is available in English and Dutch. The other linked guides are currently in Dutch.
+The user manual and the guides below are available in English and Dutch. Each guide links to its other language.
 
 | What would you like to do? | Read this |
 |---|---|
 | Install the module and learn how to use its pages | [English](docs/PtW_Spa_Control_User_Manual_EN.pdf) / [Dutch](docs/PtW_Spa_Control_Handleiding.pdf) |
-| Check the connections | [Hardware and wiring](docs/HARDWARE_NL.md) |
-| Make a first or additional Matter connection | [Matter pairing](docs/MATTER_NL.md) |
-| Install the Home Assistant dashboard | [Home Assistant](home-assistant/README.md) |
-| Build firmware from source | [Developer build instructions](docs/BUILD_NL.md) |
+| Check the connections | [Hardware and wiring](docs/HARDWARE_EN.md) |
+| Make a first or additional Matter connection | [Matter pairing](docs/MATTER_EN.md) |
+| Connect Spa Control through MQTT | [MQTT setup](docs/MQTT_EN.md) |
+| Install the Home Assistant dashboard | [Home Assistant](home-assistant/README_EN.md) |
+| Build firmware from source | [Developer build instructions](docs/BUILD_EN.md) |
 
 Before installation, check that your pump, cables and module are compatible.
 The documented test setup is a **MIAMI2021 with 6-wire Type1** and an
@@ -68,9 +69,9 @@ for all Bestway models.
 `firmware/` contains the firmware and web interface. `home-assistant/` contains
 the dashboard, scripts and packages. `docs/` contains the guides. Tests and
 contributor information are in `tests/`, `tools/` and
-[CONTRIBUTING.md](CONTRIBUTING.md).
+[CONTRIBUTING.md](CONTRIBUTING_EN.md).
 
-See also the [changelog](CHANGELOG.md).
+See also the [changelog](CHANGELOG_EN.md).
 
 ## Acknowledgements and license
 
@@ -85,4 +86,4 @@ its changes and support are not provided by the original project.
 The project software is released under the **GNU General Public License
 version 3 (GPL-3.0)**. See [LICENSE](LICENSE) for the full text.
 Third-party components retain their own licenses. See also the
-[licensing information (Dutch)](docs/HERKOMST_EN_LICENTIES.md).
+[origin and licensing information](docs/ORIGIN_AND_LICENSES_EN.md).

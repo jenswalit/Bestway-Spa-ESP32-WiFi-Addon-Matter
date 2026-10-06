@@ -1,5 +1,7 @@
 # Hardware en aansluiting
 
+[English](HARDWARE_EN.md)
+
 Geteste opstelling: ESP32-C6-DevKitC-1-N8, MIAMI2021, 6-wire Type1.
 
 | Verbinding | Signaal | GPIO |
@@ -27,3 +29,7 @@ Foto's en de gebruikersstappen staan op pagina 37–39 van de
 [handleiding](PtW_Spa_Control_Handleiding.pdf). Laat netspanningsaansluitingen,
 aardverbindingen en vermogenskabels ongemoeid.
 
+
+## PCB-ontwerp en bestelbestanden
+
+Zie [het V2M-hardwarepakket](../hardware/BWC_V2M/README.md) voor schema, PCB-bron, Gerber en de actuele verificatiestatus, nadat dat pakket is geüpload. Een volledige assemblage-onderdelenlijst en montagehandleiding worden nog afgerond.

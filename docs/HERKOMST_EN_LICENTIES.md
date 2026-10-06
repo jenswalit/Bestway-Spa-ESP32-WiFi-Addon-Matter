@@ -1,5 +1,7 @@
 # Herkomst en licenties
 
+[English](ORIGIN_AND_LICENSES_EN.md)
+
 ## Oorspronkelijk project
 
 Deze software is gebaseerd op
@@ -31,8 +33,7 @@ componentlicenties staan in `docs/third-party/`.
 
 ## Hardware en merknamen
 
-Schema, Gerber-bestanden en een complete onderdelenlijst zijn nog niet beschikbaar.
-De licentievoorwaarden voor die toekomstige bestanden worden bij publicatie vermeld.
+Het V2M-hardwarepakket bevat schema, PCB-bron en Gerber-bestanden. Zie [het hardwareoverzicht](../hardware/BWC_V2M/README.md) nadat dat pakket is geüpload. Een complete assemblage-onderdelenlijst wordt nog afgerond. Een afzonderlijke hardwarelicentie is nog niet vastgesteld; de softwarelicentie wordt hier niet automatisch uitgebreid tot de PCB-ontwerpbestanden.
 
 Bestway en Lay-Z-Spa worden gebruikt om de toepassing te beschrijven.
 Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.
