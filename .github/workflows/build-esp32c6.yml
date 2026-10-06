@@ -74,8 +74,13 @@ jobs:
           fi
           cd connectedhomeip/connectedhomeip
           python3 scripts/checkout_submodules.py --platform esp32 linux --shallow
+          # Only install ESP32 build dependencies, not the all-platform test suite.
+          # ESP-Matter install.sh otherwise bootstraps all,esp32 (including mobly).
+          source scripts/bootstrap.sh -p esp32
+          deactivate
           cd ../..
-          ./install.sh --no-host-tool
+          source "$sdk_root/esp-idf/export.sh"
+          ./install.sh --no-host-tool --no-bootstrap
 
       - name: Build firmware using supplied sdkconfig
         run: |

@@ -16,16 +16,24 @@ De workflow controleert of de CHIP-submodule exact bij deze basis past en stopt 
 
 ## Installeren in de bestaande lokale GitHub-map
 
-Download `Bestway_GitHub_Actions_ESP32C6.zip` naar Downloads. Voer uit vanuit de lokale repository en stop bij een fout:
+Download `Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip` naar Downloads. Voer uit vanuit de lokale repository en stop bij een fout:
 
 ```bash
 git pull --ff-only
-unzip -o ~/Downloads/Bestway_GitHub_Actions_ESP32C6.zip -d .
+unzip -o ~/Downloads/Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip -d .
 git add -- .github/workflows/build-esp32c6.yml docs/GITHUB_ACTIONS_NL.md docs/GITHUB_ACTIONS_EN.md
 git diff --cached --stat
 git commit -m "Add GitHub Actions ESP-IDF and ESP-Matter firmware build"
 git push origin main
 ```
+
+## Python-installatie: mobly-conflict
+
+De eerste workflow gebruikte ESP-Matter `install.sh --no-host-tool`. Die slaat hosttools over, maar installeert nog steeds de volledige CHIP-testomgeving via `bootstrap.sh -p all,esp32`, inclusief `mobly`.
+
+Deze workflow voert eerst `bootstrap.sh -p esp32` uit en daarna `install.sh --no-host-tool --no-bootstrap`. De CHIP-buildomgeving (GN/ZAP en de basisrequirements) blijft aanwezig; de aanvullende testdependencies uit `requirements.all.txt` worden niet geïnstalleerd. De ESP-IDF-, ESP-Matter- en CHIP-versies blijven gelijk. Er wordt geen dependencyresolver omzeild en er worden geen firmwarebronnen gewijzigd.
+
+Het gedeelde foutfragment bevat geen specifieke conflicterende dependency. Deze aanpassing is daarom nog geen bewijs dat de volledige build slaagt. Controleer de nieuwe GitHub-run. Bij een nieuwe fout: deel het log vanaf de eerste fout, inclusief de regels onder `The conflict is caused by` als die aanwezig zijn.
 
 ## Build starten
 

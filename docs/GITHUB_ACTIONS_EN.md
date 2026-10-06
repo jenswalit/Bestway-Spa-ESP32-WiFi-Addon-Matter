@@ -16,16 +16,24 @@ The workflow verifies the exact CHIP submodule revision and stops if it differs.
 
 ## Install from your existing local repository
 
-Download `Bestway_GitHub_Actions_ESP32C6.zip` to Downloads. Run these commands from your local repository, stopping on any error:
+Download `Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip` to Downloads. Run these commands from your local repository, stopping on any error:
 
 ```bash
 git pull --ff-only
-unzip -o ~/Downloads/Bestway_GitHub_Actions_ESP32C6.zip -d .
+unzip -o ~/Downloads/Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip -d .
 git add -- .github/workflows/build-esp32c6.yml docs/GITHUB_ACTIONS_NL.md docs/GITHUB_ACTIONS_EN.md
 git diff --cached --stat
 git commit -m "Add GitHub Actions ESP-IDF and ESP-Matter firmware build"
 git push origin main
 ```
+
+## Python setup: mobly conflict
+
+The first workflow used ESP-Matter `install.sh --no-host-tool`. This skips host tools but still installs the full CHIP test environment through `bootstrap.sh -p all,esp32`, including `mobly`.
+
+This workflow first runs `bootstrap.sh -p esp32`, then `install.sh --no-host-tool --no-bootstrap`. The base CHIP build environment (GN/ZAP and core requirements) remains available; additional test dependencies from `requirements.all.txt` are not installed. ESP-IDF, ESP-Matter and CHIP revisions are unchanged. No dependency resolver is bypassed and firmware sources are unchanged.
+
+The supplied error excerpt does not identify the specific conflicting dependencies. This change is therefore not proof of a successful full build. Check the new GitHub run. If it fails, share the log starting at the first error, including `The conflict is caused by` lines when present.
 
 ## Start a build
 
