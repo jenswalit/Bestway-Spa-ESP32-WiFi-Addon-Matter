@@ -33,9 +33,14 @@ jobs:
 
     steps:
       - name: Check out project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
+
+      - name: Select Python for Matter build dependencies
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
 
       - name: Install Linux build prerequisites
         run: |
