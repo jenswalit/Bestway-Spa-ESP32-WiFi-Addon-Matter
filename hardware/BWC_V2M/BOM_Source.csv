@@ -1,0 +1,28 @@
+﻿Reference,Quantity_design,Value_or_symbol,PCB_display_name,Footprint,Manufacturer_source,MPN_source,LCSC_source,Pad_count,Note
+U1,1,ESP32-C6-DevKitC-1-N8,ESP32-C6-DevKitC-1-N8,BWC_ESP32C6_V2M,,,,32,Library metadata only; not a verified purchasing specification
+R10,1,4.7kΩ,RES-TH_BD1.8-L3.3-P7.30-D0.5,RES-TH_BD1.8-L3.3-P7.30-D0.5,SEI(Stackpole Electronics Inc.),RNF18JTD4K70,C2588255,2,Library metadata only; not a verified purchasing specification
+J4,1,GPIO10,J1,HDR-TH_2P-P2.54-V-M-1,null,Jumper2,C2940092,2,Library metadata only; not a verified purchasing specification
+J2,1,GPIO0 / TEMP reserve,HDR-TH_2P-P2.54-V-M-1,HDR-TH_2P-P2.54-V-M-1,null,Jumper2,C2940092,2,Library metadata only; not a verified purchasing specification
+U2,1,LEVEL-SHIFTER-8CH,LEVEL-SHIFTER-8CH,LEVEL-SHIFTER-8CH,,,,20,Library metadata only; not a verified purchasing specification
+C2,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C3,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C4,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C5,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C6,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C7,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+C8,1,220pF,220pF,CAP-TH_L4.5-W3.0-P5.00-D1.2,Songtian Elec,R06B1B221KN0B0S0N0,C249163,2,Library metadata only; not a verified purchasing specification
+H1A,1,CIO / pomp - A,CIO,HDR-TH_6P-P2.54-V-M,MOLEX,22284060,C587040,6,Library metadata only; not a verified purchasing specification
+H1B,1,CIO / pomp - B (2021+),CIO 2021+,HDR-TH_6P-P2.54-V-M,MOLEX,22284060,C587040,6,Library metadata only; not a verified purchasing specification
+H2A,1,DSP / display - A,DSP,HDR-TH_6P-P2.54-V-M,MOLEX,22284060,C587040,6,Library metadata only; not a verified purchasing specification
+H2B,1,DSP / display - B (2021+),DSP 2021+,HDR-TH_6P-P2.54-V-M,MOLEX,22284060,C587040,6,Library metadata only; not a verified purchasing specification
+J1,1,GND,GND,HDR-M-2.54_1X4,,,C124378,4,Library metadata only; not a verified purchasing specification
+J3,1,3V,3V,HDR-M-2.54_1X4,,,C124378,4,Library metadata only; not a verified purchasing specification
+R1,1,10kΩ,10K only with U3,RES SMALL FP,UniOhm,MFR0W4F1002A50,C57436,2,Library metadata only; not a verified purchasing specification
+R2,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R3,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R4,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R5,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R6,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R7,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+R8,1,560Ω,560,RES SMALL FP,UniOhm,MFR01SF5600A10,C131702,2,Library metadata only; not a verified purchasing specification
+U3,1,TXS0108E,TXS0108E,TXS0108E,TI,TXS0108EPWR,C17206,20,Library metadata only; not a verified purchasing specification

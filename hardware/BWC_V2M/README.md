@@ -70,3 +70,7 @@ Zie [CONTROLE.txt](gerber/CONTROLE.txt) voor de technische controle. Deze vergel
 Gebaseerd op [visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
 
 De softwarelicentie en algemene herkomstinformatie staan in de [LICENSE](../../LICENSE) en [herkomstinformatie](../../docs/HERKOMST_EN_LICENTIES.md) van deze repository. Er is in dit hardwarepakket nog geen afzonderlijke hardwarelicentie vastgesteld; de softwarelicentie wordt hier niet automatisch tot de PCB-ontwerpbestanden uitgebreid.
+
+## Onderdelenlijst
+
+De [Nederlandse ontwerp-BOM](BOM.md), [English BOM](BOM_EN.md) en [CSV](BOM.csv) beschrijven de componentposities, waarden en alternatieve levelshifters. Exacte module- en stekkerkeuzes zijn nog te bevestigen; dit is geen volledig vrijgegeven assemblagebestellijst.

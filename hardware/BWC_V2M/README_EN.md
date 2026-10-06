@@ -70,3 +70,7 @@ See [CONTROLE.txt](gerber/CONTROLE.txt) for technical checks. This comparison do
 Based on [visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
 
 See this repository's [LICENSE](../../LICENSE) and [origin information](../../docs/HERKOMST_EN_LICENTIES.md) for software licensing and attribution. A separate hardware licence has not yet been established for this package; the software licence is not automatically extended to PCB design files here.
+
+## Bill of materials
+
+The [English design BOM](BOM_EN.md), [Dutch BOM](BOM.md) and [CSV](BOM.csv) list component positions, values and alternative level shifters. Exact module and mating-connector choices remain to be confirmed; this is not a fully released assembly shopping list.
