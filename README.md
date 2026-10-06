@@ -68,4 +68,19 @@ alle Bestway-modellen.
 scripts en packages. `docs/` bevat de handleidingen. Tests en informatie voor
 bijdragers staan in `tests/`, `tools/` en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Zie ook de [wijzigingen](CHANGELOG.md) en [licentie-informatie](docs/HERKOMST_EN_LICENTIES.md).
+Zie ook de [wijzigingen](CHANGELOG.md).
+
+## Herkomst en licentie
+
+Dit project is gebaseerd op
+[WiFi-remote-for-Bestway-Lay-Z-SPA van visualapproach](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
+Dank aan visualapproach en de bijdragers voor het oorspronkelijke werk.
+
+Deze aangepaste versie richt zich op de ESP32-C6 met ESP-IDF, ESP-Matter en
+het bijbehorende Home Assistant-dashboard. Het is een afzonderlijk project;
+wijzigingen en ondersteuning vallen niet onder het oorspronkelijke project.
+
+De projectsoftware wordt beschikbaar gesteld onder de **GNU General Public
+License versie 3 (GPL-3.0)**. Zie [LICENSE](LICENSE) voor de volledige tekst.
+Externe componenten behouden hun eigen licenties. Zie ook
+[herkomst en licenties](docs/HERKOMST_EN_LICENTIES.md).

@@ -69,5 +69,19 @@ the dashboard, scripts and packages. `docs/` contains the guides. Tests and
 contributor information are in `tests/`, `tools/` and
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-See also the [changelog](CHANGELOG.md) and
-[licensing information](docs/HERKOMST_EN_LICENTIES.md).
+See also the [changelog](CHANGELOG.md).
+
+## Acknowledgements and license
+
+This project is based on
+[WiFi-remote-for-Bestway-Lay-Z-SPA by visualapproach](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
+Thanks to visualapproach and the contributors for their original work.
+
+This modified version targets the ESP32-C6 with ESP-IDF, ESP-Matter and
+the accompanying Home Assistant dashboard. It is a separate project;
+its changes and support are not provided by the original project.
+
+The project software is released under the **GNU General Public License
+version 3 (GPL-3.0)**. See [LICENSE](LICENSE) for the full text.
+Third-party components retain their own licenses. See also the
+[licensing information (Dutch)](docs/HERKOMST_EN_LICENTIES.md).
