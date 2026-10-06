@@ -1,24 +1,20 @@
 # Wijzigingen
 
-## 2026-10-06 — Werkende GitHub-basis
+## 2026-10-06
 
-- Eigenaar bevestigt dat de planner-dagfix werkt.
-- Webplanner stuurt de gekozen dag mee; andere dagen blijven actief.
-- Uitgeschakelde dag blijft zichtbaar als een aparte plannerregel.
-- Overeenkomstige regels worden opnieuw samengevoegd bij terug inschakelen.
-- Eén opslagbewerking per dagwijziging en één gerichte GET om de webplanner bij te werken.
-- Bestaande NVS-, backup- en MQTT-plannerstructuur behouden; maximaal 24 regels.
-- Complete broncode georganiseerd in firmware, Home Assistant en documentatie.
-- Oude backups/logs/fasedocumentatie uit deze repository-indeling gehouden.
-- Geen wijzigingen aan de werkende firmwarecode ten opzichte van de bevestigde dagfix.
+- Documentatie gericht op installatie en gebruik door nieuwe gebruikers.
+- Webplanner: een dag uitschakelen laat de overige dagen actief.
+- Een uitgeschakelde dag blijft als aparte plannerregel zichtbaar.
+- Bij opnieuw inschakelen worden overeenkomstige regels samengevoegd.
+- Maximaal 24 plannerregels; bij onvoldoende ruimte blijft de planning ongewijzigd.
 
 ## 2026-10-05 — Handleiding 0.4
 
-- Montage tussen originele displaystekker en vrijgekomen pompconnector bevestigd.
-- Verwijzingen naar een leverancier verwijderd.
-- Onafhankelijk hobbyproject en onofficiële Bestway-uitbreiding duidelijk vermeld.
+- Montagefoto's en stappen voor aansluiting tussen pomp en display.
+- Uitleg over WiFi, Matter, Home Assistant en toegang buitenshuis.
 
-## Eerdere stabiele basis
+## Aanwezige functies
 
-WebSocket-first bediening, LowHeap logging, HTTP-handlerfix, automatische unlock,
-HA MQTT lock-switch, unieke Matter-credentials en multi-admin behouden.
+Live webbediening via WebSocket, MQTT, OTA, automatische ontgrendeling,
+unieke Matter-onboardinggegevens per module, meerdere Matter-koppelingen,
+planner, historie en Home Assistant-dashboard. Debuglogging staat standaard uit.

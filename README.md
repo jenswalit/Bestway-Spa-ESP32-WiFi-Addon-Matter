@@ -2,77 +2,56 @@
 
 <img src="docs/assets/ptw-logo.png" alt="PtW Spa Control" width="160">
 
-Een onafhankelijke WiFi-uitbreiding voor Bestway Lay-Z-Spa op de **ESP32-C6**.
-Dit is een hobbyproject en geen officiële Bestway WiFi-module.
+Bedien je Bestway Lay-Z-Spa met je telefoon, Home Assistant, Google Home of
+Apple Home. Deze ESP32-C6-module wordt tussen de pomp en het originele display
+geplaatst. Het fysieke display blijft bruikbaar.
 
-De module komt tussen de pompprint en het originele display. Je kunt de spa lokaal
-bedienen via de webinterface, via MQTT in Home Assistant en via Matter in meerdere
-ecosystemen. Bestaande functies blijven op de echte pompstatus gebaseerd.
+Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.
 
-## Begin hier
+## Een geprogrammeerde module ontvangen?
 
-- **Module installeren en gebruiken:** [gebruikershandleiding PDF](docs/PtW_Spa_Control_Handleiding.pdf).
-- **Firmware bouwen en via OTA bijwerken:** [bouwinstructies](docs/BUILD_NL.md).
-- **Onze HA-pagina installeren:** [Home Assistant](home-assistant/README.md).
-- **Dit pakket naar GitHub zetten:** [uploadstappen voor Ubuntu](docs/GITHUB_UPLOAD_NL.md).
-- **Wijzigingen:** [changelog](CHANGELOG.md).
+Je hoeft geen firmware te bouwen of ontwikkelsoftware te installeren.
+Begin met de **[gebruikershandleiding (PDF)](docs/PtW_Spa_Control_Handleiding.pdf)**.
+Die beschrijft stap voor stap:
 
-## Functies
+1. De module aansluiten op een geschikte pomp.
+2. Verbinden met het WiFi-toegangspunt van de module en je thuis-WiFi instellen.
+3. De webinterface openen en de spa bedienen.
+4. Koppelen met Matter en een tweede ecosysteem toevoegen.
+5. Optioneel: Home Assistant, het spa-dashboard en toegang buitenshuis instellen.
 
-- WebSocket voor live status en bediening, zonder onnodige automatische HTTP-polling.
-- Power, filter, verwarming, bubbels, doeltemperatuur en HydroJets bij geschikte modellen.
-- Automatisch ontgrendelen wanneer een functie dat nodig heeft.
-- Planner met maximaal 24 regels en bediening per dag.
-- Historie, geschat energieverbruik, onderhoudsherinneringen en OTA.
-- Unieke Matter-onboardinggegevens per module, bewaard over OTA-updates.
-- Meerdere Matter-fabrics en tijdelijk koppelvenster voor extra controllers.
-- Home Assistant-dashboard met Premium, Spa Resort en Spa Console, plus zeven talen.
-- Opwarmschatting met Buienradar en dagtotalen voor verwarming, filter en bubbels.
-- Debug/live logging standaard uit; logbuffer alleen wanneer logging wordt aangezet.
+Home Assistant is optioneel. De webinterface en rechtstreekse Matter-bediening
+kun je ook zonder Home Assistant gebruiken.
 
-## Huidige basis
+## Wat kun je ermee?
 
-De planner-dagfix is op **6 oktober 2026 door de eigenaar als werkend bevestigd**.
-De firmware blijft de bestaande projectversie `5.0.0` gebruiken. De repository-start
-is geen nieuwe OTA-versie: deze indeling verandert de werkende broncode niet.
+- Spa aan/uit, filter, verwarming, bubbels en doeltemperatuur bedienen.
+- HydroJets bedienen als je model die ondersteunt.
+- Dagplanningen maken en bekijken.
+- Temperatuur, activiteit, historie en geschat energieverbruik bekijken.
+- Firmware bijwerken via de webinterface met OTA.
+- Koppelen met meerdere Matter-ecosystemen, zonder bestaande koppelingen te wissen.
+- Een Home Assistant-dashboard gebruiken met drie layouts en zeven talen.
 
-De aangeleverde bouwconfiguratie en dependency lock vermelden **ESP-IDF 5.5.5**.
-ESP-Matter en connectedhomeip zijn externe SDK's; zie [versies](docs/BUILD_NL.md).
-Er is hier geen volledige ESP-IDF/Matter-build uitgevoerd. De gerichte C++- en
-JavaScript-tests voor de planner zijn wel uitgevoerd.
+## Handleidingen
 
-## Indeling
-
-| Map of bestand | Inhoud |
+| Wat wil je doen? | Lees dit |
 |---|---|
-| `firmware/` | ESP-IDF-project met embedded webinterface en werkende configuratie |
-| `home-assistant/` | Dashboard, JavaScript, planner scripts en packages |
-| `docs/` | Handleiding, bouwen, hardware, Matter en GitHub-upload |
-| `tests/` | Gerichte hosttests met ESP/NVS-stubs |
-| `tools/verify.sh` | Lokale broncontrole en planner-tests |
-| `CHANGELOG.md` | Wijzigingen en bevestigde basis |
+| Module installeren en alle pagina's leren gebruiken | [Gebruikershandleiding](docs/PtW_Spa_Control_Handleiding.pdf) |
+| Aansluitingen controleren | [Hardware en aansluiting](docs/HARDWARE_NL.md) |
+| Eerste of extra Matter-koppeling maken | [Matter koppelen](docs/MATTER_NL.md) |
+| Home Assistant-dashboard installeren | [Home Assistant](home-assistant/README.md) |
+| Zelf firmware bouwen | [Bouwinstructies voor ontwikkelaars](docs/BUILD_NL.md) |
 
-Het ZIP-pakket behoudt `managed_components` als aangeleverde snapshot. Git negeert
-die gegenereerde downloads; een nieuwe checkout haalt ze via de componentmanager
-op met de versies uit `dependencies.lock`. De aanwezige hoofdlicenties zijn ook
-gekopieerd naar `docs/third-party/`. Oude backups, logs en verouderde fase-README's
-zijn niet meegenomen.
-De bewaarde `sdkconfig` bevat de gecontroleerde bouwinstellingen; echte netwerk- en
-modulegegevens worden tijdens gebruik ingesteld en horen niet in Git.
+Controleer vóór montage of je pomp, kabels en module bij elkaar passen. De
+gedocumenteerde testopstelling is een **MIAMI2021 met 6-wire Type1** en een
+**ESP32-C6-DevKitC-1-N8**. De aansluitfoto's zijn geen universeel schema voor
+alle Bestway-modellen.
 
-## Aansluiting
+## Broncode
 
-**Pompprint → CIO-zijde van module → DSP-zijde → origineel display.**
-Haal de netstekker uit het stopcontact voordat je de pomp opent. Gebruik de juiste
-kabels voor jouw uitvoering. De montagefoto's in de handleiding tonen de besproken
-pomp, geen universele aansluiting voor alle modellen. Zie [hardware](docs/HARDWARE_NL.md).
+`firmware/` bevat de firmware en webinterface. `home-assistant/` bevat het dashboard,
+scripts en packages. `docs/` bevat de handleidingen. Tests en informatie voor
+bijdragers staan in `tests/`, `tools/` en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Bijdragen en uitbrengen
-
-Werk voor veranderingen op een branch, bouw en test op de spa en documenteer de
-uitkomst. Gebruik OTA voor normale updates. Een factory reset of NVS-wisactie is
-geen normale update- of extra Matter-koppelstap. Zie [bijdragen](CONTRIBUTING.md).
-
-Dit pakket kiest geen nieuwe algemene open-source-licentie namens de maker.
-Lees [herkomst en licenties](docs/HERKOMST_EN_LICENTIES.md) voordat je het project
-openbaar verspreidt of er een algemene licentie aan toevoegt.
+Zie ook de [wijzigingen](CHANGELOG.md) en [licentie-informatie](docs/HERKOMST_EN_LICENTIES.md).

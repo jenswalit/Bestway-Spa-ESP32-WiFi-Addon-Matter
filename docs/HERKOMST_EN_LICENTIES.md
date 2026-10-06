@@ -1,20 +1,21 @@
 # Herkomst en licenties
 
-Dit is het onafhankelijke PtW Spa Control hobbyproject voor de ESP32-C6.
-Bestway en Lay-Z-Spa zijn namen van de spa waarvoor deze uitbreiding wordt gebruikt;
-het project is geen officiële Bestway WiFi-module.
+PtW Spa Control is een onafhankelijk hobbyproject voor de ESP32-C6.
+Het is geen officiële Bestway WiFi-module en er is geen verbondenheid met Bestway.
 
-De repository gebruikt ESP-IDF, ESP-Matter, connectedhomeip en registry-componenten.
-De aanwezige licentieteksten in `firmware/managed_components/` zijn ongewijzigd
-bewaard in het ZIP-pakket; hoofdlicenties staan daarnaast in `docs/third-party/`.
-De componentmanager downloadt die onderdelen voor een nieuwe Git-checkout. Een
-nieuwe algemene projectlicentie mag die voorwaarden niet vervangen.
+## Projectcode
 
-Er is bij deze GitHub-voorbereiding geen nieuwe algemene licentie gekozen. Voor
-openbare verspreiding moet de maker eerst de herkomst van eigen en overgenomen
-code nalopen en een passende licentie kiezen. Deze voorbereiding is bedoeld voor
-de bestaande privérepository en bevat geen toezegging van Matter-certificering.
+Voor de projectcode is nog geen algemene open-source-licentie vastgelegd.
+De beschikbaarheid van de broncode geeft daarom niet automatisch toestemming
+voor onbeperkt hergebruik of verspreiding. Neem voor toestemming contact op
+met de projectbeheerder.
 
-De montagefoto's zijn door de maker aangeleverd; de screenshots komen uit het
-project. Hun aanwezigheid geeft geen toestemming om andere merken of personen
-als officiële projectpartner te presenteren.
+## Externe onderdelen
+
+ESP-IDF, ESP-Matter, connectedhomeip en de overige gebruikte componenten hebben
+hun eigen licenties. Raadpleeg de betreffende SDK's en componenten voor de
+volledige voorwaarden. Kopieën van aanwezige componentlicenties staan in
+`docs/third-party/`.
+
+De merknamen Bestway en Lay-Z-Spa worden gebruikt om de toepassing te beschrijven.
+Dit project bevat geen verklaring van Matter-certificering.

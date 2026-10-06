@@ -27,9 +27,3 @@ Foto's en de gebruikersstappen staan op pagina 37–39 van de
 [handleiding](PtW_Spa_Control_Handleiding.pdf). Laat netspanningsaansluitingen,
 aardverbindingen en vermogenskabels ongemoeid.
 
-## Stabiliteit van Type1
-
-Behoud RX rising-only en TX falling-only. De bestaande CIO ISR-fixes, TX-latch,
-laatste-bit-herstel en DSP-payloadcorrectie zijn onderdeel van de werkende basis.
-Voeg geen ANYEDGE, global GPIO ISR, PARLIO of permanente per-edge-debug toe om een
-planner- of webinterfaceprobleem op te lossen.

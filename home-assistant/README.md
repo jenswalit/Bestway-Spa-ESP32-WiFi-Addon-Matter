@@ -1,6 +1,6 @@
 # Home Assistant spa-dashboard
 
-Deze map bevat de aangeleverde, werkende HA-pagina met drie layouts en zeven talen.
+Installeer hiermee het spa-dashboard met drie layouts en zeven talen.
 De firmware wordt via MQTT verbonden met HA. Matter kan daarnaast actief blijven.
 
 ## Bestanden
@@ -56,20 +56,18 @@ Tik op een regel om de popup te openen. De dagenkeuze bepaalt `daysMask`.
 **Opdracht actief** schakelt de volledige regel voor de geselecteerde dagen.
 De knop **Verwijderen** in de popup verwijdert die regel.
 
-De aangeleverde kaart heeft voor vasthouden en dubbel tikken `action: none`.
-De teksthint die die acties noemt is dus niet leidend; gebruik de popup.
-Deze GitHub-indeling verandert die werkende kaart niet stilzwijgend.
+Vasthouden en dubbel tikken hebben in deze dashboardversie geen actie. Gebruik
+de popup voor wijzigen en verwijderen, ook als de teksthint anders aangeeft.
 
-De ESP-webplanner kan sinds de dagfix één dag apart uitschakelen. HA ziet dan
+De ESP-webplanner kan één dag apart uitschakelen. HA ziet dan
 een actieve regel voor de andere dagen en een aparte uitgeschakelde dagregel.
 Bij opnieuw aanzetten worden overeenkomstige regels weer samengevoegd.
 
 ## Layout en taal
 
 Premium, Spa Resort en Spa Console zijn browserkeuzes. De zeven talen volgen de
-HA-taal: Nederlands, Frans, Duits, Engels, Italiaans, Spaans en Pools. De Console
-houdt de extra binnenruimte voor activiteitstekst en tijd. De plannerhoogte en
-mobiele volgorde zijn in de aangeleverde YAML behouden.
+HA-taal: Nederlands, Frans, Duits, Engels, Italiaans, Spaans en Pools. Op een telefoon past de plannerhoogte zich aan het aantal zichtbare regels aan,
+met de systeemkaart eronder.
 
 ## Packages
 

@@ -1,6 +1,6 @@
 # Werken aan dit project
 
-Maak kleine wijzigingen vanaf de bevestigde basis. Benoem het probleem, de wijziging
+Maak kleine, gerichte wijzigingen. Benoem het probleem, de wijziging
 en de uitgevoerde controles in een pull request. Pas SDK, bus en UI niet tegelijk
 zonder concrete noodzaak aan.
 
