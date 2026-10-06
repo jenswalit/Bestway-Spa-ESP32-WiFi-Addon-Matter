@@ -1,0 +1,13 @@
+BWC V2M — source/Gerber checks — 2026-10-06
+Gerber SHA256: 521caeb84e6bb563c2d08bc1aa228a85e477d5cefc87d439215a39738c6ef49d
+Board outline: 98.1964 x 64.6684 mm
+Copper layers: 2
+ZIP CRC: OK
+Gerber included unchanged
+
+PASS: component holes: 145 records match PCB locations and diameters (tolerance 0.002 mm).
+PASS: via-only drill file: 5 records match PCB locations and diameters (tolerance 0.002 mm).
+PASS: mounting holes: 4 records match PCB locations and diameters (tolerance 0.002 mm).
+PASS: all 220 line segments in 115 PCB tracks found in corresponding Gerber copper layers (positions and widths, tolerance 0.002 mm).
+PASS: 140 schematic pin/net connections and 27 component association IDs match latest PCB. Firmware GPIO map matches.
+NOT CHECKED: full filled-copper geometry/connectivity, clearance DRC, manufacturing settings or physical prototype operation.
