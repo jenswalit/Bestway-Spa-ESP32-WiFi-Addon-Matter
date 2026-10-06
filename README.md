@@ -1,5 +1,7 @@
 # Bestway Spa ESP32 WiFi Add-on with Matter
 
+**Nederlands** | [English](README_EN.md)
+
 <img src="docs/assets/ptw-logo.png" alt="PtW Spa Control" width="160">
 
 Bedien je Bestway Lay-Z-Spa met je telefoon, Home Assistant, Google Home of
@@ -8,10 +10,22 @@ geplaatst. Het fysieke display blijft bruikbaar.
 
 Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.
 
-## Een geprogrammeerde module ontvangen?
+## Kies je startpunt
 
-Je hoeft geen firmware te bouwen of ontwikkelsoftware te installeren.
-Begin met de **[gebruikershandleiding (PDF)](docs/PtW_Spa_Control_Handleiding.pdf)**.
+| Wat heb je? | Wat doe je eerst? |
+|---|---|
+| Een module waarop de firmware al staat | Sluit de module aan en volg de gebruikershandleiding. Zelf bouwen is niet nodig. |
+| Een lege module en geschikte kant-en-klare firmware | Flash eerst de firmware via USB. Zelf bouwen is niet nodig als er een passend firmwarebestand beschikbaar is. |
+| Een lege module en alleen de broncode | Installeer de bouwomgeving, bouw de firmware en flash de module via USB. |
+| Je wilt de module zelf maken | Bekijk de hardware-informatie. Schema, Gerber-bestanden en een complete onderdelenlijst worden later toegevoegd. |
+
+Deze repository bevat broncode. Dat betekent niet automatisch dat er ook een
+kant-en-klaar firmwarebestand beschikbaar is. Een GitHub-broncode-ZIP kun je niet
+rechtstreeks op een ESP flashen. Zie de [bouwinstructies](docs/BUILD_NL.md) als je
+zelf wilt bouwen.
+
+Heb je een werkende module? Begin met de
+**[gebruikershandleiding (PDF)](docs/PtW_Spa_Control_Handleiding.pdf)**.
 Die beschrijft stap voor stap:
 
 1. De module aansluiten op een geschikte pomp.
