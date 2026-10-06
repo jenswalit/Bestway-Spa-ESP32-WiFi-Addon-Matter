@@ -1,0 +1,140 @@
+name: Build ESP32-C6 firmware
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'firmware/**'
+      - '!firmware/**/*.md'
+      - 'tests/**'
+      - 'tools/verify.sh'
+      - '.github/workflows/build-esp32c6.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: esp32c6-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    env:
+      IDF_VERSION: v5.5.5
+      ESP_MATTER_COMMIT: ff9f07ecb0bf01d7a2db5428149ef16bf601774c
+      CHIP_COMMIT: 539342f32d5f4dc93761c2f9325afe29270068f1
+      IDF_CCACHE_ENABLE: '1'
+
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Linux build prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            git curl wget unzip zip build-essential cmake ninja-build ccache \
+            python3-dev python3-venv python3-pip pkg-config \
+            libssl-dev libffi-dev libdbus-1-dev libglib2.0-dev \
+            libavahi-client-dev libreadline-dev libudev-dev libusb-1.0-0-dev
+
+      - name: Run focused project checks
+        run: bash tools/verify.sh
+
+      - name: Install pinned ESP-IDF and ESP-Matter
+        run: |
+          sdk_root="$RUNNER_TEMP/bestway-sdk"
+          mkdir -p "$sdk_root"
+          git clone --branch "$IDF_VERSION" --depth 1 --recursive --shallow-submodules \
+            https://github.com/espressif/esp-idf.git "$sdk_root/esp-idf"
+          cd "$sdk_root/esp-idf"
+          ./install.sh esp32c6
+          source ./export.sh
+
+          git init "$sdk_root/esp-matter"
+          git -C "$sdk_root/esp-matter" remote add origin https://github.com/espressif/esp-matter.git
+          git -C "$sdk_root/esp-matter" fetch --depth 1 origin "$ESP_MATTER_COMMIT"
+          git -C "$sdk_root/esp-matter" checkout --detach FETCH_HEAD
+          cd "$sdk_root/esp-matter"
+          test "$(git rev-parse HEAD)" = "$ESP_MATTER_COMMIT"
+          git submodule update --init --depth 1
+          actual_chip_commit="$(git -C connectedhomeip/connectedhomeip rev-parse HEAD)"
+          if [ "$actual_chip_commit" != "$CHIP_COMMIT" ]; then
+            echo "CHIP revision does not match the recorded project baseline."
+            echo "Expected: $CHIP_COMMIT; found: $actual_chip_commit"
+            exit 1
+          fi
+          cd connectedhomeip/connectedhomeip
+          python3 scripts/checkout_submodules.py --platform esp32 linux --shallow
+          cd ../..
+          ./install.sh --no-host-tool
+
+      - name: Build firmware using supplied sdkconfig
+        run: |
+          sdk_root="$RUNNER_TEMP/bestway-sdk"
+          source "$sdk_root/esp-idf/export.sh"
+          source "$sdk_root/esp-matter/export.sh"
+          cd "$GITHUB_WORKSPACE/firmware"
+          grep -q '^CONFIG_IDF_TARGET="esp32c6"$' sdkconfig
+          idf.py build
+          test -s build/Bestway_Matter_v5.bin
+
+      - name: Prepare OTA download and build metadata
+        run: |
+          sdk_root="$RUNNER_TEMP/bestway-sdk"
+          mkdir -p dist/ota
+          cp firmware/build/Bestway_Matter_v5.bin dist/ota/
+          (
+            cd dist/ota
+            sha256sum Bestway_Matter_v5.bin > SHA256SUMS.txt
+          )
+          export BUILD_IDF_COMMIT="$(git -C "$sdk_root/esp-idf" rev-parse HEAD)"
+          python3 - <<'PY'
+          import datetime, hashlib, json, os
+          from pathlib import Path
+          app = Path('dist/ota/Bestway_Matter_v5.bin')
+          info = {
+              'project_commit': os.environ['GITHUB_SHA'],
+              'github_run_id': os.environ['GITHUB_RUN_ID'],
+              'idf_version': os.environ['IDF_VERSION'],
+              'idf_commit': os.environ['BUILD_IDF_COMMIT'],
+              'esp_matter_commit': os.environ['ESP_MATTER_COMMIT'],
+              'chip_commit': os.environ['CHIP_COMMIT'],
+              'target': 'esp32c6',
+              'built_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'app_size_bytes': app.stat().st_size,
+              'app_sha256': hashlib.sha256(app.read_bytes()).hexdigest(),
+              'sdkconfig_sha256': hashlib.sha256(Path('firmware/sdkconfig').read_bytes()).hexdigest(),
+          }
+          Path('dist/ota/build-info.json').write_text(json.dumps(info, indent=2) + '\n')
+          Path('dist/ota/README.txt').write_text(
+              'Bestway ESP32-C6 OTA application image\n\n'
+              'Extract this download and upload Bestway_Matter_v5.bin using the module OTA page.\n'
+              'Do not upload the artifact ZIP. Keep power and WiFi available during the update.\n'
+              'This is an application image, not a complete USB-flashing package for a blank ESP.\n'
+              'Compilation does not establish a successful physical spa test.\n'
+              'A normal OTA update does not require factory reset or NVS erasure.\n'
+          )
+          PY
+          {
+            echo '### ESP32-C6 build completed'
+            echo 'Download the OTA artifact below this run.'
+            echo 'Extract it and use `Bestway_Matter_v5.bin` on the existing OTA page.'
+            echo 'This workflow builds firmware; it does not update a device or publish a Release.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload OTA firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bestway_ESP32C6_OTA_${{ github.run_number }}
+          path: dist/ota/
+          if-no-files-found: error
+          retention-days: 30
