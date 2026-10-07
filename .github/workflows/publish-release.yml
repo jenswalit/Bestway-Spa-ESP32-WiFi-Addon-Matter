@@ -1,0 +1,142 @@
+name: Publish OTA release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-release.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: publish-ota-v5.0.0
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: v5.0.0
+      BUILD_RUN: '37533435675'
+      SOURCE_COMMIT: 0e434738ad475d4697289e7c112d483a7b66dae7
+      APP_SHA256: 7fafdf15347de536d92296ca605b1ee24572d315937330b28405705088805945
+
+    steps:
+      - name: Verify successful source build and download its OTA artifact
+        shell: bash
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$BUILD_RUN" > run.json
+          python3 - <<'PY'
+          import json, os
+          run = json.load(open('run.json'))
+          assert run['conclusion'] == 'success', 'Source build was not successful'
+          assert run['head_sha'] == os.environ['SOURCE_COMMIT'], 'Unexpected source commit'
+          assert run['repository']['full_name'] == os.environ['GITHUB_REPOSITORY']
+          PY
+          gh run download "$BUILD_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name Bestway_ESP32C6_OTA_4 --dir release-assets
+          cd release-assets
+          sha256sum -c SHA256SUMS.txt
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          info = json.loads(Path('build-info.json').read_text())
+          app = Path('Bestway_Matter_v5.bin')
+          digest = hashlib.sha256(app.read_bytes()).hexdigest()
+          assert digest == os.environ['APP_SHA256'] == info['app_sha256']
+          assert info['project_commit'] == os.environ['SOURCE_COMMIT']
+          assert info['github_run_id'] == os.environ['BUILD_RUN']
+          assert info['target'] == 'esp32c6'
+          assert app.stat().st_size == info['app_size_bytes']
+          print('Verified original OTA image and source build metadata')
+          PY
+
+      - name: Prepare bilingual release notes
+        shell: bash
+        run: |
+          cat > release-notes.md <<'RELEASE_NOTES'
+          # Bestway Spa ESP32-C6 WiFi Add-on + Matter — v5.0.0
+          
+          ## Nederlands
+          
+          Eerste firmware-release voor de ESP32-C6-DevKitC-1-N8. De firmware biedt een webinterface, MQTT/Home Assistant, Matter, planner en OTA-updates. HydroJets zijn beschikbaar wanneer het geselecteerde spa-model ze ondersteunt.
+          
+          ### Bestaande module bijwerken via OTA
+          1. Download **Bestway_Matter_v5.bin** onder Assets.
+          2. Open de OTA-pagina in de webinterface van de module.
+          3. Selecteer het .bin-bestand en start de update. Houd voeding en WiFi beschikbaar.
+          4. Wacht op de herstart en controleer de spa-status.
+          
+          Een normale OTA-update vereist geen factory reset of NVS-wisactie. Matter-identiteit en bestaande instellingen horen behouden te blijven.
+          
+          Deze download is een appbestand voor bestaande modules met een compatibele partitie-indeling. Voor de eerste installatie op een lege ESP: zie [BUILD_NL.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.0/docs/BUILD_NL.md).
+          
+          ## English
+          
+          First firmware release for ESP32-C6-DevKitC-1-N8. Includes the web interface, MQTT/Home Assistant, Matter, scheduler and OTA updates. HydroJets are available when supported by the selected spa model.
+          
+          ### Update an existing module using OTA
+          1. Download **Bestway_Matter_v5.bin** under Assets.
+          2. Open the module web interface's OTA page.
+          3. Select the .bin file and start the update. Keep power and WiFi available.
+          4. Wait for the reboot and check spa status.
+          
+          Normal OTA updates require neither factory reset nor NVS erasure. Matter identity and existing settings should be retained.
+          
+          This is an application image for existing modules with a compatible partition layout. For first installation on a blank ESP, see [BUILD_EN.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.0/docs/BUILD_EN.md).
+          
+          ## Build / validation
+          
+          - Target: ESP32-C6.
+          - ESP-IDF: v5.5.5.
+          - ESP-Matter: ff9f07ecb0bf01d7a2db5428149ef16bf601774c.
+          - CHIP: 539342f32d5f4dc93761c2f9325afe29270068f1.
+          - Source commit: 0e434738ad475d4697289e7c112d483a7b66dae7.
+          - [Successful GitHub build #4](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/actions/runs/37533435675).
+          - App size: 2,803,936 bytes.
+          - SHA-256: 7fafdf15347de536d92296ca605b1ee24572d315937330b28405705088805945.
+          
+          Compilatie en checksumcontrole zijn geslaagd. Een fysieke spa-test van dit CI-bestand is nog niet bevestigd.
+          
+          Compilation and checksum verification passed. A physical spa test of this CI image has not yet been confirmed.
+          
+          ## Downloads
+          
+          - Bestway_Matter_v5.bin — OTA application image.
+          - SHA256SUMS.txt — application checksum.
+          - build-info.json — source and SDK revisions.
+          - README.txt — brief OTA instructions.
+          
+          Based on [visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA). See the repository LICENSE for licensing. This is an independent community add-on.
+          RELEASE_NOTES
+
+      - name: Publish verified OTA files
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            actual_target="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq '.object.sha')"
+            if [ "$actual_target" != "$SOURCE_COMMIT" ]; then
+              echo "Existing release tag points to a different source commit."
+              exit 1
+            fi
+            is_draft="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')"
+            if [ "$is_draft" != "true" ]; then
+              echo "Release is already published; leaving it in place."
+              exit 0
+            fi
+          else
+            gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+              --target "$SOURCE_COMMIT" --title "v5.0.0 — Bestway Spa ESP32-C6 WiFi + Matter" \
+              --notes-file release-notes.md --draft
+          fi
+          gh release upload "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            release-assets/Bestway_Matter_v5.bin release-assets/SHA256SUMS.txt \
+            release-assets/build-info.json release-assets/README.txt --clobber
+          gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --notes-file release-notes.md --draft=false --latest
+          echo "Published: https://github.com/$GITHUB_REPOSITORY/releases/tag/$RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
