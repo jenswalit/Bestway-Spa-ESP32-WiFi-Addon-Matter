@@ -31,7 +31,7 @@ With the MQTT base topic `layzspa`, the dashboard expects entities for power, fi
 ## Installation
 
 1. Copy the JavaScript file to Home Assistant's `www/` directory.
-2. Add or update the dashboard resource to `/local/bestway-language-card.js?v=4`, type **JavaScript module**. Update an existing entry rather than adding a duplicate.
+2. Add or update the dashboard resource to `/local/bestway-language-card.js?v=5`, type **JavaScript module**. Update an existing entry rather than adding a duplicate.
 3. Place both packages in `packages/`. Keep your existing packages configuration. If packages are not configured yet, use this within the single `homeassistant:` section:
 
 ```yaml
