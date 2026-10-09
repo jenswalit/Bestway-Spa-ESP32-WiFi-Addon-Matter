@@ -36,7 +36,7 @@ getoond wanneer de betreffende entiteit aanwezig is.
 
 1. Kopieer het JavaScript-bestand naar HA `www/`.
 2. Bewerk de bestaande dashboardresource tot
-   `/local/bestway-language-card.js?v=4`, type **JavaScript-module**. Geen duplicaat.
+   `/local/bestway-language-card.js?v=5`, type **JavaScript-module**. Geen duplicaat.
 3. Plaats beide packages en behoud je bestaande packages-instelling. Voor een
    nog ontbrekende inrichting gebruik je binnen de ene homeassistant-sleutel:
 
