@@ -1,4 +1,4 @@
-const CACHE_NAME = "spa-control-v334-c6-planner-day-fix";
+const CACHE_NAME = "spa-control-c6-demo-target-fix-20261010";
 const STATIC_FILES = [
   "/manifest.json?v=3210",
   "/icons/icon.svg",
@@ -60,3 +60,4 @@ self.addEventListener("fetch", event => {
     }))
   );
 });
+

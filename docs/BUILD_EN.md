@@ -12,6 +12,8 @@ Already have a programmed module? Follow the [English user manual](PtW_Spa_Contr
 | ESP-IDF | 5.5.5 according to the supplied sdkconfig header and dependencies.lock |
 | ESP-Matter | ff9f07ecb0bf01d7a2db5428149ef16bf601774c |
 | connectedhomeip | 539342f32d5f4dc93761c2f9325afe29270068f1 |
+| Local Python | 3.14.4, separate ESP-IDF environment |
+| GitHub Actions Python | 3.12, existing CI baseline |
 | Project version | 5.0.0 |
 
 Install ESP-IDF and ESP-Matter using the versions above. These SDKs are outside this repository. Check your installation:
@@ -25,6 +27,49 @@ git -C ~/esp/esp-matter/connectedhomeip/connectedhomeip rev-parse HEAD
 The supplied sdkconfig also retains `CONFIG_IDF_INIT_VERSION="5.5.4"`, recording its original configuration version. Use the actual SDK version and dependency lock when checking compatibility; a directory named `release-v5.5` alone does not identify the installed patch version.
 
 The examples below assume ESP-IDF at `~/.espressif/release-v5.5/esp-idf` and ESP-Matter at `~/esp/esp-matter`. Adjust the paths if yours differ. Managed dependencies are downloaded during the first build according to `dependencies.lock`, so network access is required.
+
+## Selecting Python 3.14
+
+Python runs on the development computer, not on the ESP32. Changing its version
+does not require changing Matter fabrics or device settings. The user reported a
+successful local build with Python 3.14.4; the automated GitHub build retains its
+existing Python 3.12 baseline. Python 3.14 is therefore neither a general minimum
+requirement nor an already validated CI configuration.
+
+ESP-IDF uses a separate environment for each Python version. If
+`idf5.5_py3.14_env` is missing, create it using the installed Python 3.14:
+
+```bash
+(
+  export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env"
+  /usr/bin/python3 ~/.espressif/release-v5.5/esp-idf/tools/idf_tools.py install-python-env
+)
+```
+
+First check that `/usr/bin/python3 --version` actually reports 3.14. This command
+installs IDF Python dependencies; any additional ESP-Matter dependencies remain
+part of ESP-Matter setup. Keep the existing 3.12 environment as a fallback.
+
+Use the explicit `IDF_PYTHON_ENV_PATH` from the build example in your `spa` alias
+as well. For a clone using this repository's directory layout, put this in
+`~/.bashrc`:
+
+```bash
+alias spa='export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env" && source ~/.espressif/release-v5.5/esp-idf/export.sh && source ~/esp/esp-matter/export.sh && cd ~/projects/Bestway-Spa-ESP32-WiFi-Addon-Matter/firmware'
+```
+
+Adjust the project path if your firmware is directly in
+`~/projects/Bestway_Matter_v5`. Reload with `source ~/.bashrc`, run `spa`, then
+check `python --version` and `idf.py --version`.
+
+If the build directory still refers to Python 3.12, run `idf.py fullclean`, then
+`idf.py build` from the firmware directory. This does not erase source files,
+`sdkconfig` or device NVS.
+
+If cleanup reports a modified or incomplete managed component, preserve its
+contents outside `managed_components`, keep `dependencies.lock`, and run
+`idf.py reconfigure` followed by `idf.py build` to fetch the locked dependency
+again.
 
 ## Download the project
 
@@ -40,6 +85,7 @@ git clone https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter.
 Open a terminal with your ESP-IDF/Matter environment active. If needed:
 
 ```bash
+export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env"
 source ~/.espressif/release-v5.5/esp-idf/export.sh
 source ~/esp/esp-matter/export.sh
 cd ~/projects/Bestway-Spa-ESP32-WiFi-Addon-Matter/firmware
@@ -87,3 +133,4 @@ bash tools/verify.sh
 Requirements: Python 3, Node.js and g++ with C++17 support. The tests use the actual planner implementation with NVS/ESP stubs. They do not replace a full ESP-IDF build or a test on the spa.
 
 This guide assumes an installed ESP-IDF/Matter build environment. It is not a complete SDK installation tutorial.
+

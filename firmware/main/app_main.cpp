@@ -626,7 +626,8 @@ static esp_err_t attribute_update_cb(attribute::callback_type_t type,
             return ESP_OK;
         }
 
-        if (bestway_bus.model_info().family ==
+        if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+            bestway_bus.model_info().family ==
             BestwayProtocolFamily::Uart4Wire) {
 
             if (item->function == SpaFunction::Power) {
@@ -660,7 +661,8 @@ static esp_err_t attribute_update_cb(attribute::callback_type_t type,
         if (g_syncing_from_bus) return ESP_OK;
 
         if (attribute_id == MatterThermostatAttributes::OccupiedHeatingSetpoint::Id) {
-            if (bestway_bus.model_info().family ==
+            if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+                bestway_bus.model_info().family ==
                     BestwayProtocolFamily::Uart4Wire &&
                 !bestway_bus.godmode()) {
 
@@ -684,7 +686,8 @@ static esp_err_t attribute_update_cb(attribute::callback_type_t type,
         }
 
         if (attribute_id == MatterThermostatAttributes::SystemMode::Id) {
-            if (bestway_bus.model_info().family ==
+            if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+                bestway_bus.model_info().family ==
                     BestwayProtocolFamily::Uart4Wire &&
                 !bestway_bus.godmode()) {
 
@@ -2188,3 +2191,4 @@ g_matter_started = true;
         vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
+

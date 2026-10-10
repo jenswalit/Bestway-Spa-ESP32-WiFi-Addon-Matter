@@ -2916,6 +2916,8 @@ static LiveCommandResult execute_live_command(const std::string &cmd)
     const auto family =
         bestway_bus.model_info().family;
 
+    const bool hardware = bestway_bus.mode() == BestwayBus::Mode::Hardware;
+
     const bool target_command =
         cmd == "target:+" ||
         cmd == "target:-";
@@ -2925,7 +2927,7 @@ static LiveCommandResult execute_live_command(const std::string &cmd)
      * - Heater en target zijn bestuurbaar wanneer Godmode actief is.
      * - Een zelfstandige 4-wire Power-actie is niet bewezen.
      */
-    if (family == BestwayProtocolFamily::Uart4Wire &&
+    if (hardware && family == BestwayProtocolFamily::Uart4Wire &&
         cmd == "toggle:power") {
 
         ESP_LOGW(TAG, "Web Power geweigerd voor 4-wire");
@@ -2935,7 +2937,7 @@ static LiveCommandResult execute_live_command(const std::string &cmd)
         return result;
     }
 
-    if (family == BestwayProtocolFamily::Uart4Wire &&
+    if (hardware && family == BestwayProtocolFamily::Uart4Wire &&
         !bestway_bus.godmode() &&
         (cmd == "toggle:heater" || target_command)) {
 
@@ -2985,7 +2987,7 @@ static LiveCommandResult execute_live_command(const std::string &cmd)
         return result;
     }
 
-    if (family == BestwayProtocolFamily::SixWireType2 &&
+    if (hardware && family == BestwayProtocolFamily::SixWireType2 &&
         cmd == "toggle:power") {
 
         ESP_LOGW(TAG, "Web Power geweigerd voor Type2");
@@ -6829,3 +6831,4 @@ esp_err_t web_server_start()
     ESP_LOGI(TAG, "Dashboard: push-state + directe knoppen, REST alleen fallback");
     return ESP_OK;
 }
+

@@ -2,6 +2,12 @@
 
 [English](CHANGELOG_EN.md)
 
+## 2026-10-10
+
+- Demo-doeltemperatuur is direct geldig en zichtbaar; +/- werkt ook met een gekozen 4-wire-model zonder Godmode.
+- Hardwarebeperkingen voor temperatuur, verwarming en Power worden alleen in hardwaremodus toegepast (web, MQTT en Matter).
+- Bouwinstructies beschrijven de lokale Python 3.14.4-omgeving, de `spa`-alias en het opnieuw configureren na een Python-wissel. GitHub Actions blijft op Python 3.12.
+
 ## 2026-10-06
 
 - Engelse gebruikershandleiding toegevoegd, inclusief inhoudsopgave, screenshots en montagefoto's.
@@ -22,3 +28,4 @@
 Live webbediening via WebSocket, MQTT, OTA, automatische ontgrendeling,
 unieke Matter-onboardinggegevens per module, meerdere Matter-koppelingen,
 planner, historie en Home Assistant-dashboard. Debuglogging staat standaard uit.
+

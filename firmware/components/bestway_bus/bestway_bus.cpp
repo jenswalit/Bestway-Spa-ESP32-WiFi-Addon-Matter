@@ -152,7 +152,7 @@ void BestwayBus::begin()
         spa.set_connection_state(true);
         spa.data_valid = true;
         spa.temperature_c = 37;
-        spa.set_target_temperature(39);
+        set_target_temperature(39);
 
         ESP_LOGW(TAG, "DEMO-MODUS actief - geen pomp nodig");
         ESP_LOGI(TAG,
@@ -1097,6 +1097,8 @@ void BestwayBus::set_target_temperature(int target_c)
 
     if (mode_ == Mode::Simulation) {
         spa.set_target_temperature(target_c);
+        // De simulator bevestigt het doel direct; hardware wacht op pompdata.
+        spa.target_temperature_valid = true;
         bump_version();
 
         ESP_LOGI(TAG,
@@ -6143,3 +6145,4 @@ void BestwayBus::hardware_loop(uint64_t now)
         return;
     }
 }
+

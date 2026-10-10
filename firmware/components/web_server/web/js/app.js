@@ -2625,6 +2625,7 @@ function ensureFullPowerControl() {
 
 
 function applyProtocolCapabilities() {
+  const simulation = state.busMode === "SIMULATION";
   const is4Wire = state.protocolFamily === "4wire";
   const type2 = state.protocolFamily === "type2";
   const godMode = is4Wire && state.godMode === true;
@@ -2695,14 +2696,14 @@ function applyProtocolCapabilities() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    const disabled = is4Wire || type2;
+    const disabled = !simulation && (is4Wire || type2);
     el.disabled = disabled;
 
-    if (is4Wire) {
+    if (disabled && is4Wire) {
       el.title = tr(
         "Power heeft voor 4-wire geen zelfstandige bediening"
       );
-    } else if (type2) {
+    } else if (disabled && type2) {
       el.title = tr(
         "Power is voor Type2 niet bestuurbaar"
       );
@@ -2720,7 +2721,7 @@ function applyProtocolCapabilities() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    const disabled = is4Wire && !godMode;
+    const disabled = !simulation && is4Wire && !godMode;
     el.disabled = disabled;
 
     if (disabled) {
@@ -2734,6 +2735,7 @@ function applyProtocolCapabilities() {
 
   /*
    * Target +/-:
+   * - simulatie: altijd beschikbaar, zonder fysieke pomp
    * - 4-wire: beschikbaar in Godmode
    * - Type1/Type2: bestaande fysieke pompbediening
    */
@@ -2742,7 +2744,7 @@ function applyProtocolCapabilities() {
       "#targetTemperatureCard .temperature-card-controls button"
     )
     .forEach(button => {
-      const disabled = is4Wire && !godMode;
+      const disabled = !simulation && is4Wire && !godMode;
       button.disabled = disabled;
 
       if (disabled) {
@@ -3977,7 +3979,7 @@ document
   });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js?v=3256");
+  navigator.serviceWorker.register("/sw.js?v=3258");
 }
 
 loadTemperaturePreference();
@@ -5506,7 +5508,7 @@ function initSettingsAccordions() {
 }
 
 const observer=new MutationObserver(mutations=>{for(const m of mutations){m.addedNodes.forEach(n=>{if(n.nodeType===Node.ELEMENT_NODE)translateDom(n);});}});
-document.addEventListener("DOMContentLoaded",()=>{resetLiveControls();initSettingsAccordions();loadLanguageSettings();loadAppearanceSettings();loadWidgetSettings();applyDashboardOrder();loadDashboardOrderEditor();applyDashboardButtonOrder();loadDashboardButtonOrderEditor();initializeLocalizedFileInputs();loadWeatherSettings();loadMaintenance();fetchWeather();scheduleWeatherRefresh();const unitSelect=document.getElementById("temperatureUnit");if(unitSelect){unitSelect.addEventListener("change",()=>{preferredTemperatureUnit=unitSelect.value||"Celsius";localStorage.setItem("layzspaTemperatureUnit",preferredTemperatureUnit);applyTemperatureUnit();});}observer.observe(document.body,{childList:true,subtree:true});if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js?v=3256").catch(()=>{});});
+document.addEventListener("DOMContentLoaded",()=>{resetLiveControls();initSettingsAccordions();loadLanguageSettings();loadAppearanceSettings();loadWidgetSettings();applyDashboardOrder();loadDashboardOrderEditor();applyDashboardButtonOrder();loadDashboardButtonOrderEditor();initializeLocalizedFileInputs();loadWeatherSettings();loadMaintenance();fetchWeather();scheduleWeatherRefresh();const unitSelect=document.getElementById("temperatureUnit");if(unitSelect){unitSelect.addEventListener("change",()=>{preferredTemperatureUnit=unitSelect.value||"Celsius";localStorage.setItem("layzspaTemperatureUnit",preferredTemperatureUnit);applyTemperatureUnit();});}observer.observe(document.body,{childList:true,subtree:true});if("serviceWorker" in navigator)navigator.serviceWorker.register("/sw.js?v=3258").catch(()=>{});});
 
 
 let matterWindowTimer = null;
@@ -5716,3 +5718,4 @@ async function saveDemoMode() {
 window.addEventListener("load", () => {
   loadDemoMode();
 });
+

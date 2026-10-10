@@ -12,3 +12,35 @@ vm.createContext(context);vm.runInContext(snippets,context);
  full=true;calls=[];server=[{...original}];context.schedulesData=[{...original}];await vm.runInContext('setScheduleEnabled(13,2,false)',context);assert.equal(calls.length,2);assert(nodes['day-ma'].innerHTML.includes('checked onchange'));assert(nodes['day-di'].innerHTML.includes('checked onchange'));
  console.log('PASS: real web functions pass dayMask, reload server state, show only Monday off, restore on 409');
 })().catch(e=>{console.error(e);process.exitCode=1;});
+
+
+// Exercise the real capability function across simulator and hardware states.
+{
+ const ids=['power','controlPower','heater','controlHeater'];
+ const elements=Object.fromEntries(ids.map(id=>[id,{disabled:false,title:'',removeAttribute(name){delete this[name];}}]));
+ const targetButtons=[0,1].map(()=>({disabled:false,title:'',removeAttribute(name){delete this[name];}}));
+ const ui={state:{},tr:x=>x,ensureGodModeControl:()=>null,ensureFullPowerControl:()=>null,setControlActive:()=>{},
+   document:{getElementById:id=>elements[id],querySelectorAll:()=>targetButtons}};
+ vm.createContext(ui);
+ vm.runInContext(code.slice(code.indexOf('function applyProtocolCapabilities()'),code.indexOf('function resetLiveControls()')),ui);
+ for(const protocolFamily of ['4wire','type1','type2']) {
+   ui.state={busMode:'SIMULATION',protocolFamily,godMode:false};
+   vm.runInContext('applyProtocolCapabilities()',ui);
+   for(const button of [...Object.values(elements),...targetButtons]) {assert.equal(button.disabled,false);assert.equal(button.title,undefined);}
+ }
+ ui.state={busMode:'HARDWARE',protocolFamily:'4wire',godMode:false};
+ vm.runInContext('applyProtocolCapabilities()',ui);
+ for(const button of [...Object.values(elements),...targetButtons]) assert.equal(button.disabled,true);
+ ui.state.godMode=true;
+ vm.runInContext('applyProtocolCapabilities()',ui);
+ assert.equal(elements.power.disabled,true);assert.equal(elements.heater.disabled,false);
+ targetButtons.forEach(button=>assert.equal(button.disabled,false));
+ ui.state={busMode:'HARDWARE',protocolFamily:'type2',godMode:false};
+ vm.runInContext('applyProtocolCapabilities()',ui);
+ assert.equal(elements.power.disabled,true);assert.equal(elements.heater.disabled,false);
+ targetButtons.forEach(button=>assert.equal(button.disabled,false));
+ ui.state={busMode:'HARDWARE',protocolFamily:'type1',godMode:false};
+ vm.runInContext('applyProtocolCapabilities()',ui);
+ for(const button of [...Object.values(elements),...targetButtons]) assert.equal(button.disabled,false);
+ console.log('PASS: demo controls enabled for every protocol; hardware/Godmode restrictions preserved');
+}

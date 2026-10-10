@@ -12,6 +12,8 @@ Een geprogrammeerde module gebruiken? Volg de [gebruikershandleiding](PtW_Spa_Co
 | ESP-IDF | 5.5.5 volgens sdkconfig en dependencies.lock |
 | ESP-Matter | ff9f07ecb0bf01d7a2db5428149ef16bf601774c |
 | connectedhomeip | 539342f32d5f4dc93761c2f9325afe29270068f1 |
+| Python lokaal | 3.14.4, aparte ESP-IDF-omgeving |
+| Python GitHub Actions | 3.12, bestaande CI-basis |
 | Projectversie | 5.0.0 |
 
 Installeer ESP-IDF en ESP-Matter en gebruik de SDK-versies uit deze tabel.
@@ -29,6 +31,50 @@ Pas de paden aan als je de SDK's elders hebt geïnstalleerd.
 De dependency-componenten worden bij de eerste build gedownload volgens
 `dependencies.lock`; daarvoor is netwerktoegang nodig.
 
+## Python 3.14 kiezen
+
+Python draait op de ontwikkelcomputer, niet op de ESP32. Een andere Python-versie
+vereist geen wijziging van Matter-koppelingen of apparaatinstellingen. De lokale
+build met Python 3.14.4 is door de gebruiker gemeld als geslaagd; de automatische
+GitHub-build blijft voorlopig bij de bestaande Python 3.12-basis. Python 3.14 is
+dus geen algemene minimumvereiste en geen reeds geteste CI-configuratie.
+
+Bij een overstap maakt ESP-IDF een aparte omgeving per Python-versie. Als
+`idf5.5_py3.14_env` nog ontbreekt, maak die aan met de geïnstalleerde Python 3.14:
+
+```bash
+(
+  export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env"
+  /usr/bin/python3 ~/.espressif/release-v5.5/esp-idf/tools/idf_tools.py install-python-env
+)
+```
+
+Controleer eerst dat `/usr/bin/python3 --version` daadwerkelijk 3.14 toont. Deze
+opdracht installeert de IDF-Python-afhankelijkheden; eventuele aanvullende
+ESP-Matter-afhankelijkheden blijven onderdeel van de ESP-Matter-installatie.
+Bewaar de bestaande 3.12-omgeving als terugval.
+
+Gebruik de expliciete `IDF_PYTHON_ENV_PATH` uit het bouwvoorbeeld ook in je `spa`
+alias. Bijvoorbeeld voor een kloon met de mappenstructuur van deze repository,
+in `~/.bashrc`:
+
+```bash
+alias spa='export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env" && source ~/.espressif/release-v5.5/esp-idf/export.sh && source ~/esp/esp-matter/export.sh && cd ~/projects/Bestway-Spa-ESP32-WiFi-Addon-Matter/firmware'
+```
+
+Pas alleen het projectpad aan als jouw project direct in
+`~/projects/Bestway_Matter_v5` staat. Laad daarna `source ~/.bashrc` en controleer
+na `spa` met `python --version` en `idf.py --version`.
+
+Als de buildmap nog naar Python 3.12 verwijst, voer vanuit de firmwaremap
+`idf.py fullclean` en daarna `idf.py build` uit. Dit wist geen broncode,
+`sdkconfig` of apparaat-NVS.
+
+Als het opruimen meldt dat een beheerde component gewijzigd of onvolledig is,
+verwijder dan niet zomaar de wijzigingen. Bewaar de betreffende component buiten
+`managed_components`, laat `dependencies.lock` staan en voer `idf.py reconfigure`
+en `idf.py build` uit om de vastgelegde afhankelijkheid opnieuw op te halen.
+
 ## Project downloaden
 
 Download en pak de broncode uit, of kloon de repository:
@@ -43,6 +89,7 @@ git clone https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter.
 Open een terminal waarin je IDF/Matter-omgeving actief is. Zo nodig:
 
 ```bash
+export IDF_PYTHON_ENV_PATH="$HOME/.espressif/python_env/idf5.5_py3.14_env"
 source ~/.espressif/release-v5.5/esp-idf/export.sh
 source ~/esp/esp-matter/export.sh
 cd ~/projects/Bestway-Spa-ESP32-WiFi-Addon-Matter/firmware
@@ -87,3 +134,4 @@ met NVS/ESP-stubs. Ze vervangen geen volledige ESP-IDF-build of test op de spa.
 
 Deze instructies veronderstellen een geïnstalleerde ESP-IDF/Matter-bouwomgeving;
 ze zijn geen complete SDK-installatiehandleiding.
+

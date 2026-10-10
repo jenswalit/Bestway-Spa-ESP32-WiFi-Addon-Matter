@@ -2716,10 +2716,11 @@ void MqttManager::loop()
                 break;
 
             case PendingMqttCommand::Power:
-                if (bestway_bus.model_info().family !=
+                if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+                    (bestway_bus.model_info().family !=
                         BestwayProtocolFamily::SixWireType1 &&
                     bestway_bus.model_info().family !=
-                        BestwayProtocolFamily::SixWireType2) {
+                        BestwayProtocolFamily::SixWireType2)) {
 
                     ESP_LOGW(
                         TAG,
@@ -2743,7 +2744,8 @@ void MqttManager::loop()
                 break;
 
             case PendingMqttCommand::Heater:
-                if (bestway_bus.model_info().family ==
+                if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+                    bestway_bus.model_info().family ==
                         BestwayProtocolFamily::Uart4Wire &&
                     !bestway_bus.godmode()) {
 
@@ -2844,7 +2846,8 @@ void MqttManager::loop()
                 break;
 
             case PendingMqttCommand::Target:
-                if (bestway_bus.model_info().family ==
+                if (bestway_bus.mode() == BestwayBus::Mode::Hardware &&
+                    bestway_bus.model_info().family ==
                         BestwayProtocolFamily::Uart4Wire &&
                     !bestway_bus.godmode()) {
 
@@ -3453,3 +3456,4 @@ MqttConfig &MqttManager::config()
 {
     return config_;
 }
+
