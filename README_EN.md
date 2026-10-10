@@ -23,6 +23,10 @@ This repository contains source code. This does not automatically mean that
 prebuilt firmware is available. A GitHub source ZIP cannot be flashed directly
 onto an ESP. See the [build instructions](docs/BUILD_EN.md) to build from source.
 
+The [build guide](docs/BUILD_EN.md#selecting-python-314) now also covers the local
+Python 3.14.4 environment and updated `spa` alias. The automated GitHub build
+still uses Python 3.12; using a programmed module does not require Python.
+
 Once your module is running, start with the
 **[user manual (PDF, English)](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
 A [Dutch version](docs/PtW_Spa_Control_Handleiding.pdf) is also available. It explains:

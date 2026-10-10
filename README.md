@@ -24,6 +24,11 @@ kant-en-klaar firmwarebestand beschikbaar is. Een GitHub-broncode-ZIP kun je nie
 rechtstreeks op een ESP flashen. Zie de [bouwinstructies](docs/BUILD_NL.md) als je
 zelf wilt bouwen.
 
+De [bouwinstructies](docs/BUILD_NL.md#python-314-kiezen) beschrijven nu ook de
+lokale Python 3.14.4-omgeving en de bijgewerkte `spa`-alias. De automatische
+GitHub-build gebruikt nog Python 3.12; voor een werkende module hoef je Python
+niet te installeren.
+
 Heb je een werkende module? Begin met de
 **[gebruikershandleiding (Nederlands)](docs/PtW_Spa_Control_Handleiding.pdf)**
 of de **[Engelse handleiding](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
