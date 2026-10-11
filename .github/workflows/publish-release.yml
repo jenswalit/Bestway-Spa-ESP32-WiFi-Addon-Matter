@@ -12,7 +12,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: publish-ota-v5.0.0
+  group: publish-ota-v5.0.1
   cancel-in-progress: false
 
 jobs:
@@ -21,10 +21,9 @@ jobs:
     timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
-      RELEASE_TAG: v5.0.0
-      BUILD_RUN: '37533435675'
-      SOURCE_COMMIT: 0e434738ad475d4697289e7c112d483a7b66dae7
-      APP_SHA256: 7fafdf15347de536d92296ca605b1ee24572d315937330b28405705088805945
+      RELEASE_TAG: v5.0.1
+      BUILD_RUN: '38127239675'
+      SOURCE_COMMIT: d1734758702d96779d5d2353547be9c651c8d0ae
 
     steps:
       - name: Verify successful source build and download its OTA artifact
@@ -39,7 +38,7 @@ jobs:
           assert run['repository']['full_name'] == os.environ['GITHUB_REPOSITORY']
           PY
           gh run download "$BUILD_RUN" --repo "$GITHUB_REPOSITORY" \
-            --name Bestway_ESP32C6_OTA_4 --dir release-assets
+            --name Bestway_ESP32C6_OTA_6 --dir release-assets
           cd release-assets
           sha256sum -c SHA256SUMS.txt
           python3 - <<'PY'
@@ -48,7 +47,7 @@ jobs:
           info = json.loads(Path('build-info.json').read_text())
           app = Path('Bestway_Matter_v5.bin')
           digest = hashlib.sha256(app.read_bytes()).hexdigest()
-          assert digest == os.environ['APP_SHA256'] == info['app_sha256']
+          assert digest == info['app_sha256'], 'Application checksum differs from successful build metadata'
           assert info['project_commit'] == os.environ['SOURCE_COMMIT']
           assert info['github_run_id'] == os.environ['BUILD_RUN']
           assert info['target'] == 'esp32c6'
@@ -60,11 +59,11 @@ jobs:
         shell: bash
         run: |
           cat > release-notes.md <<'RELEASE_NOTES'
-          # Bestway Spa ESP32-C6 WiFi Add-on + Matter — v5.0.0
+          # Bestway Spa ESP32-C6 WiFi Add-on + Matter — v5.0.1
           
           ## Nederlands
           
-          Eerste firmware-release voor de ESP32-C6-DevKitC-1-N8. De firmware biedt een webinterface, MQTT/Home Assistant, Matter, planner en OTA-updates. HydroJets zijn beschikbaar wanneer het geselecteerde spa-model ze ondersteunt.
+          Correctie voor demomodus op de ESP32-C6. De gesimuleerde doeltemperatuur is nu geldig en zichtbaar; de plus/min-knoppen werken ook bij een gekozen 4-wire-model zonder Godmode. De beperkingen voor echte hardware blijven behouden. Firmware, webinterface en Matter-versietekst zijn gelijkgetrokken naar 5.0.1 (Matter softwareversienummer 5002).
           
           ### Bestaande module bijwerken via OTA
           1. Download **Bestway_Matter_v5.bin** onder Assets.
@@ -74,11 +73,11 @@ jobs:
           
           Een normale OTA-update vereist geen factory reset of NVS-wisactie. Matter-identiteit en bestaande instellingen horen behouden te blijven.
           
-          Deze download is een appbestand voor bestaande modules met een compatibele partitie-indeling. Voor de eerste installatie op een lege ESP: zie [BUILD_NL.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.0/docs/BUILD_NL.md).
+          Deze download is een appbestand voor bestaande modules met een compatibele partitie-indeling. Voor de eerste installatie op een lege ESP: zie [BUILD_NL.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.1/docs/BUILD_NL.md).
           
           ## English
           
-          First firmware release for ESP32-C6-DevKitC-1-N8. Includes the web interface, MQTT/Home Assistant, Matter, scheduler and OTA updates. HydroJets are available when supported by the selected spa model.
+          Demo-mode fix for ESP32-C6. The simulated target temperature is now valid and visible; plus/minus controls work with a selected 4-wire model without Godmode. Real-hardware restrictions remain in place. Firmware, web interface and Matter version strings now report 5.0.1 (Matter software version number 5002).
           
           ### Update an existing module using OTA
           1. Download **Bestway_Matter_v5.bin** under Assets.
@@ -88,18 +87,19 @@ jobs:
           
           Normal OTA updates require neither factory reset nor NVS erasure. Matter identity and existing settings should be retained.
           
-          This is an application image for existing modules with a compatible partition layout. For first installation on a blank ESP, see [BUILD_EN.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.0/docs/BUILD_EN.md).
+          This is an application image for existing modules with a compatible partition layout. For first installation on a blank ESP, see [BUILD_EN.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.1/docs/BUILD_EN.md).
           
           ## Build / validation
           
           - Target: ESP32-C6.
           - ESP-IDF: v5.5.5.
+          - Python CI: 3.12; local Python 3.14.4 build reported working by the user.
           - ESP-Matter: ff9f07ecb0bf01d7a2db5428149ef16bf601774c.
           - CHIP: 539342f32d5f4dc93761c2f9325afe29270068f1.
-          - Source commit: 0e434738ad475d4697289e7c112d483a7b66dae7.
-          - [Successful GitHub build #4](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/actions/runs/37533435675).
-          - App size: 2,803,936 bytes.
-          - SHA-256: 7fafdf15347de536d92296ca605b1ee24572d315937330b28405705088805945.
+          - Source commit: d1734758702d96779d5d2353547be9c651c8d0ae.
+          - [Successful GitHub build #6](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/actions/runs/38127239675).
+          - App size: @APP_SIZE@ bytes.
+          - SHA-256: @APP_SHA256@.
           
           Compilatie en checksumcontrole zijn geslaagd. Een fysieke spa-test van dit CI-bestand is nog niet bevestigd.
           
@@ -114,6 +114,13 @@ jobs:
           
           Based on [visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA). See the repository LICENSE for licensing. This is an independent community add-on.
           RELEASE_NOTES
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          info = json.loads(Path('release-assets/build-info.json').read_text())
+          notes = Path('release-notes.md')
+          notes.write_text(notes.read_text().replace('@APP_SHA256@', info['app_sha256']).replace('@APP_SIZE@', str(info['app_size_bytes'])))
+          PY
 
       - name: Publish verified OTA files
         shell: bash
@@ -131,7 +138,7 @@ jobs:
             fi
           else
             gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
-              --target "$SOURCE_COMMIT" --title "v5.0.0 — Bestway Spa ESP32-C6 WiFi + Matter" \
+              --target "$SOURCE_COMMIT" --title "v5.0.1 — Bestway Spa ESP32-C6 WiFi + Matter" \
               --notes-file release-notes.md --draft
           fi
           gh release upload "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
