@@ -14,7 +14,7 @@ Een geprogrammeerde module gebruiken? Volg de [gebruikershandleiding](PtW_Spa_Co
 | connectedhomeip | 539342f32d5f4dc93761c2f9325afe29270068f1 |
 | Python lokaal | 3.14.4, aparte ESP-IDF-omgeving |
 | Python GitHub Actions | 3.12, bestaande CI-basis |
-| Projectversie | 5.0.0 |
+| Projectversie | 5.0.1 |
 
 Installeer ESP-IDF en ESP-Matter en gebruik de SDK-versies uit deze tabel.
 De SDK's staan buiten deze repository. Controleer de versies van je installatie:
@@ -110,6 +110,14 @@ Upload dat via de bestaande OTA-pagina van de module. Een broncode-ZIP, bootload
 of partition-tablebestand is geen appbestand voor deze OTA-pagina. Laat voeding en
 WiFi tijdens de update beschikbaar. Factory reset, erase-flash en NVS wissen zijn
 geen onderdeel van deze stap.
+
+## Versie bij iedere firmwarewijziging
+
+Verhoog bij iedere update aan de firmware de projectversie in
+`firmware/CMakeLists.txt`, het oplopende `PROJECT_VER_NUMBER` voor Matter en de
+`app-version` in de webinterface. De Matter-versietekst en het Matter-versienummer
+worden afgeleid van deze CMake-waarden. Werk ook de changelog bij. Alleen een
+documentatiewijziging verhoogt de firmwareversie niet.
 
 ## Controles bij firmwarewijzigingen
 

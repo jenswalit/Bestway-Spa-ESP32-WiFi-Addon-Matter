@@ -14,7 +14,7 @@ Already have a programmed module? Follow the [English user manual](PtW_Spa_Contr
 | connectedhomeip | 539342f32d5f4dc93761c2f9325afe29270068f1 |
 | Local Python | 3.14.4, separate ESP-IDF environment |
 | GitHub Actions Python | 3.12, existing CI baseline |
-| Project version | 5.0.0 |
+| Project version | 5.0.1 |
 
 Install ESP-IDF and ESP-Matter using the versions above. These SDKs are outside this repository. Check your installation:
 
@@ -111,6 +111,14 @@ After a successful build, the application file is:
 `firmware/build/Bestway_Matter_v5.bin`
 
 Upload it using the module's existing OTA page. A source-code ZIP, bootloader or partition-table file is not an application image for that page. Keep power and WiFi available throughout the update. Factory reset, erase-flash and NVS erasure are not part of a normal update.
+
+## Version every firmware update
+
+For every firmware update, increment the project version in
+`firmware/CMakeLists.txt`, the monotonically increasing Matter
+`PROJECT_VER_NUMBER`, and the web interface `app-version`. The Matter version
+string and number are derived from these CMake values. Update the changelog as
+well. Documentation-only changes do not increment the firmware version.
 
 ## Checks when changing firmware
 

@@ -48,5 +48,12 @@ s=Path('firmware/components/web_server/web_server.cpp').read_text()
 n=len(re.findall(r'^\s*register_uri\(',s,re.M))+1
 assert n<=48,(n,'HTTP URI limiet overschreden')
 print(f'PASS: {n} URI handlers inclusief WebSocket; limiet 48')
+cmake=Path('firmware/CMakeLists.txt').read_text()
+version=re.search(r'set\(PROJECT_VER "([^"\n]+)"\)',cmake).group(1)
+html=Path('firmware/components/web_server/web/index.html').read_text()
+assert f'content="{version}" name="app-version"' in html
+assert 'DEVICE_SOFTWARE_VERSION=${PROJECT_VER_NUMBER}' in cmake
+assert r'DEVICE_SOFTWARE_VERSION_STRING=\"${PROJECT_VER}\"' in cmake
+print(f'PASS: firmware/web version {version}; Matter version derived from project settings')
 PY
 

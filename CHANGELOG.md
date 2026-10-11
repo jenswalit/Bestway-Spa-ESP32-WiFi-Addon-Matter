@@ -2,8 +2,9 @@
 
 [English](CHANGELOG_EN.md)
 
-## 2026-10-10
+## 5.0.1 — 2026-10-10
 
+- Firmware- en webversie 5.0.1; Matter softwareversienummer verhoogd van 5001 naar 5002. Iedere firmwareupdate krijgt voortaan een nieuwe versie.
 - Demo-doeltemperatuur is direct geldig en zichtbaar; +/- werkt ook met een gekozen 4-wire-model zonder Godmode.
 - Hardwarebeperkingen voor temperatuur, verwarming en Power worden alleen in hardwaremodus toegepast (web, MQTT en Matter).
 - Bouwinstructies beschrijven de lokale Python 3.14.4-omgeving, de `spa`-alias en het opnieuw configureren na een Python-wissel. GitHub Actions blijft op Python 3.12.
