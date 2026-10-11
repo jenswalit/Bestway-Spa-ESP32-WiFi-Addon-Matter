@@ -2,7 +2,9 @@
 
 [English](README_EN.md)
 
-Dit is de werkende broncode met de op 6 oktober 2026 bevestigde planner-dagfix.
+Hier staat de broncode van mijn ESP32-C6-firmware **v5.0.1**, inclusief de planner-dagfix en de verbeterde temperatuurbediening in demomodus.
+
+Wil je alleen een bestaande module bijwerken? Het kant-en-klare `Bestway_Matter_v5.bin` staat bij de [laatste release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/latest). Upload dat op de OTA-pagina; zelf bouwen hoeft dan niet.
 
 Bouwen vanuit deze map, met jouw bestaande ESP-IDF en ESP-Matter omgeving:
 

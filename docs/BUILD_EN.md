@@ -2,6 +2,8 @@
 
 **English** | [Nederlands](BUILD_NL.md)
 
+Just updating your module? Download the ready-made `Bestway_Matter_v5.bin` from the [latest release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/latest) and use the OTA page. You do not need to build it yourself.
+
 Already have a programmed module? Follow the [English user manual](PtW_Spa_Control_User_Manual_EN.pdf). You do not need to build firmware to use it.
 
 ## Required build environment
@@ -31,10 +33,9 @@ The examples below assume ESP-IDF at `~/.espressif/release-v5.5/esp-idf` and ESP
 ## Selecting Python 3.14
 
 Python runs on the development computer, not on the ESP32. Changing its version
-does not require changing Matter fabrics or device settings. The user reported a
-successful local build with Python 3.14.4; the automated GitHub build retains its
-existing Python 3.12 baseline. Python 3.14 is therefore neither a general minimum
-requirement nor an already validated CI configuration.
+does not require changing Matter fabrics or device settings. I build locally
+with Python 3.14.4, which works on my computer. On GitHub I use Python 3.12,
+which also completes the full firmware build. You do not need Python for OTA.
 
 ESP-IDF uses a separate environment for each Python version. If
 `idf5.5_py3.14_env` is missing, create it using the installed Python 3.14:
@@ -103,6 +104,9 @@ idf.py -p /dev/ttyUSB0 flash
 ```
 
 `/dev/ttyUSB0` is an example for Linux; your port may differ. USB flashing is for initial installation or deliberate recovery. No erase-flash or NVS erase step is required here.
+
+After switching on a new module, wait about 45 seconds for the **LazySpaSetup**
+WiFi network to appear, then follow the user manual.
 
 ## OTA updates
 

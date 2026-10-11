@@ -2,6 +2,8 @@
 
 [English](BUILD_EN.md)
 
+Wil je alleen je module bijwerken? Download het kant-en-klare `Bestway_Matter_v5.bin` van de [laatste release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/latest) en gebruik de OTA-pagina. Zelf bouwen is dan niet nodig.
+
 Een geprogrammeerde module gebruiken? Volg de [gebruikershandleiding](PtW_Spa_Control_Handleiding.pdf). Bouwen is daarvoor niet nodig.
 
 ## Vereiste bouwomgeving
@@ -34,10 +36,10 @@ De dependency-componenten worden bij de eerste build gedownload volgens
 ## Python 3.14 kiezen
 
 Python draait op de ontwikkelcomputer, niet op de ESP32. Een andere Python-versie
-vereist geen wijziging van Matter-koppelingen of apparaatinstellingen. De lokale
-build met Python 3.14.4 is door de gebruiker gemeld als geslaagd; de automatische
-GitHub-build blijft voorlopig bij de bestaande Python 3.12-basis. Python 3.14 is
-dus geen algemene minimumvereiste en geen reeds geteste CI-configuratie.
+vereist geen wijziging van Matter-koppelingen of apparaatinstellingen. Ik bouw lokaal
+met Python 3.14.4; dat werkt op mijn computer. Op GitHub gebruik ik Python 3.12,
+waarmee de volledige firmwarebuild ook slaagt. Voor OTA heb je zelf geen Python
+nodig.
 
 Bij een overstap maakt ESP-IDF een aparte omgeving per Python-versie. Als
 `idf5.5_py3.14_env` nog ontbreekt, maak die aan met de geïnstalleerde Python 3.14:
@@ -99,6 +101,19 @@ idf.py build
 Het project staat in `firmware/`. De meegeleverde `sdkconfig` bevat de projectinstellingen. Verwijder hem niet als normale bouwstap en voer niet onnodig set-target uit.
 Als jouw eigen IDF-versie anders is, controleer dat eerst; de mapnaam release-v5.5
 alleen zegt niet welke patchversie is geïnstalleerd.
+
+## Eerste installatie via USB
+
+Sluit een lege ESP32-C6 aan met een USB-datakabel. Gebruik vanuit de firmwaremap,
+met je bouwomgeving actief, de juiste seriële poort:
+
+```bash
+idf.py -p /dev/ttyUSB0 flash
+```
+
+De poort is een Linux-voorbeeld; jouw module kan een andere poort gebruiken.
+Na het inschakelen van een nieuwe module duurt het ongeveer 45 seconden voordat
+het WiFi-netwerk **LazySpaSetup** verschijnt. Ga daarna verder met de handleiding.
 
 ## OTA
 

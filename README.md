@@ -8,21 +8,26 @@ Bedien je Bestway Lay-Z-Spa met je telefoon, Home Assistant, Google Home of
 Apple Home. Deze ESP32-C6-module wordt tussen de pomp en het originele display
 geplaatst. Het fysieke display blijft bruikbaar.
 
-Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.
+Ik heb dit project gemaakt om mijn spa makkelijk vanaf mijn telefoon en via Home Assistant of Matter te bedienen. Ik gebruik een ESP32-C6-DevKitC-1-N8 met een MIAMI2021 (6-wire Type1).
+
+Dit is mijn eigen hobbyproject, gebaseerd op het werk van visualapproach. Het is geen officiële Bestway WiFi-module.
 
 ## Kies je startpunt
 
 | Wat heb je? | Wat doe je eerst? |
 |---|---|
 | Een module waarop de firmware al staat | Sluit de module aan en volg de gebruikershandleiding. Zelf bouwen is niet nodig. |
-| Een lege module en geschikte kant-en-klare firmware | Flash eerst de firmware via USB. Zelf bouwen is niet nodig als er een passend firmwarebestand beschikbaar is. |
-| Een lege module en alleen de broncode | Installeer de bouwomgeving, bouw de firmware en flash de module via USB. |
+| Een werkende module die je wilt bijwerken | Download het kant-en-klare OTA-bestand van de release en upload het via de webinterface. |
+| Een lege ESP32-C6 | Volg de bouwinstructies en flash de eerste keer via USB. |
 | Je wilt de module zelf maken | Bekijk de hardware-informatie en het V2M-hardwarepakket. Controleer de verificatiestatus vóór bestellen; de complete assemblage-onderdelenlijst wordt nog afgerond. |
 
-Deze repository bevat broncode. Dat betekent niet automatisch dat er ook een
-kant-en-klaar firmwarebestand beschikbaar is. Een GitHub-broncode-ZIP kun je niet
-rechtstreeks op een ESP flashen. Zie de [bouwinstructies](docs/BUILD_NL.md) als je
-zelf wilt bouwen.
+## Firmware downloaden
+
+De kant-en-klare firmware **v5.0.1** staat bij de [release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/tag/v5.0.1). Download **Bestway_Matter_v5.bin** en kies dit bestand op de OTA-pagina van je module. De webinterface zit al in dit bestand; je hoeft niets apart te installeren of zelf te bouwen voor een OTA-update.
+
+De GitHub-build is geslaagd en de checksum van de download is gecontroleerd. Ik bouw lokaal met Python 3.14.4 en heb v5.0.1 op mijn module in gebruik. In deze versie heb ik ook de temperatuurbediening in demomodus opgelost.
+
+Voor een lege ESP is er nog geen complete USB-flashdownload. Daarvoor gebruik je de [bouwinstructies](docs/BUILD_NL.md). Een broncode-ZIP is bedoeld om zelf te bouwen.
 
 De [bouwinstructies](docs/BUILD_NL.md#python-314-kiezen) beschrijven nu ook de
 lokale Python 3.14.4-omgeving en de bijgewerkte `spa`-alias. De automatische
@@ -35,7 +40,7 @@ of de **[Engelse handleiding](docs/PtW_Spa_Control_User_Manual_EN.pdf)**.
 Die beschrijft stap voor stap:
 
 1. De module aansluiten op een geschikte pomp.
-2. Verbinden met het WiFi-toegangspunt van de module en je thuis-WiFi instellen.
+2. Bij een nieuwe module ongeveer 45 seconden wachten op **LazySpaSetup**, verbinden en je thuis-WiFi instellen.
 3. De webinterface openen en de spa bedienen.
 4. Koppelen met Matter en een tweede ecosysteem toevoegen.
 5. Optioneel: Home Assistant, het spa-dashboard en toegang buitenshuis instellen.
@@ -64,8 +69,8 @@ kun je ook zonder Home Assistant gebruiken.
 | Home Assistant-dashboard installeren | [Home Assistant](home-assistant/README.md) |
 | Zelf firmware bouwen | [Bouwinstructies voor ontwikkelaars](docs/BUILD_NL.md) |
 
-Controleer vóór montage of je pomp, kabels en module bij elkaar passen. De
-gedocumenteerde testopstelling is een **MIAMI2021 met 6-wire Type1** en een
+Controleer vóór montage of je pomp, kabels en module bij elkaar passen. Mijn
+opstelling is een **MIAMI2021 met 6-wire Type1** en een
 **ESP32-C6-DevKitC-1-N8**. De aansluitfoto's zijn geen universeel schema voor
 alle Bestway-modellen.
 
@@ -83,7 +88,7 @@ Dit project is gebaseerd op
 [WiFi-remote-for-Bestway-Lay-Z-SPA van visualapproach](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
 Dank aan visualapproach en de bijdragers voor het oorspronkelijke werk.
 
-Deze aangepaste versie richt zich op de ESP32-C6 met ESP-IDF, ESP-Matter en
+Ik heb deze versie aangepast voor de ESP32-C6 met ESP-IDF, ESP-Matter en
 het bijbehorende Home Assistant-dashboard. Het is een afzonderlijk project;
 wijzigingen en ondersteuning vallen niet onder het oorspronkelijke project.
 

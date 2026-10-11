@@ -22,6 +22,6 @@ ESP-IDF, ESP-Matter, connectedhomeip and other external components retain their 
 
 ## Hardware and trademarks
 
-The V2M hardware package contains schematic, PCB source and Gerber files. See [its hardware overview](../hardware/BWC_V2M/README_EN.md) once uploaded. A complete assembly BOM is still pending. A separate hardware license has not yet been established for the package; the software license is not automatically extended to the PCB design files.
+The V2M hardware package contains schematic, PCB source and Gerber files. See [its hardware overview](../hardware/BWC_V2M/README_EN.md). A complete assembly BOM is still pending. A separate hardware license has not yet been established for the package; the software license is not automatically extended to the PCB design files.
 
 Bestway and Lay-Z-Spa are used to describe the application. This is an independent hobby project, not an official Bestway WiFi module. There is no affiliation with Bestway and no claim of Matter certification.

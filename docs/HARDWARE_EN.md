@@ -2,7 +2,7 @@
 
 **English** | [Nederlands](HARDWARE_NL.md)
 
-The documented working setup uses an **ESP32-C6-DevKitC-1-N8**, **MIAMI2021** and **six-wire Type1** communication. This does not establish compatibility with every Bestway model or validate every PCB revision.
+My working setup uses an **ESP32-C6-DevKitC-1-N8**, **MIAMI2021** and **six-wire Type1** communication. Check the connections for your own spa model and the status of your chosen PCB revision before installing it.
 
 | Connection | Signal | GPIO |
 |---|---|---:|
@@ -31,7 +31,7 @@ See the installation section and photos in the [English user manual](PtW_Spa_Con
 
 ## PCB sources and Gerber files
 
-The V2M hardware package includes a schematic, editable EasyEDA sources, an ESP32-C6 footprint and a Gerber ZIP. See the [English V2M hardware overview](../hardware/BWC_V2M/README_EN.md) and [ordering guide](../hardware/BWC_V2M/ORDERING_EN.md) once the hardware package has been uploaded to the repository.
+The V2M hardware package includes a schematic, editable EasyEDA sources, an ESP32-C6 footprint and a Gerber ZIP. See the [English V2M hardware overview](../hardware/BWC_V2M/README_EN.md) and [ordering guide](../hardware/BWC_V2M/ORDERING_EN.md).
 
 The latest checked V2M export has five vias. Its straight track segments and drills were compared with the supplied PCB source, and 140 pin/net assignments match the schematic. Full copper-pour connectivity, DRC and physical prototype validation are separate checks. Consult that revision's documented verification status before ordering.
 

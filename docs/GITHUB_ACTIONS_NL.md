@@ -2,70 +2,58 @@
 
 **Nederlands** | [English](GITHUB_ACTIONS_EN.md)
 
-GitHub Actions kan deze firmware op een Linux-buildserver bouwen. Je hoeft daarvoor op je eigen computer geen ESP-IDF en ESP-Matter te installeren.
+Ik laat de firmware ook op GitHub bouwen. Zo kun je een kant-en-klaar OTA-bestand downloaden zonder zelf ESP-IDF en ESP-Matter te installeren.
 
-## Vastgelegde basis
+## Meteen bijwerken
 
-- Runner: Ubuntu 22.04.
-- ESP-IDF: v5.5.5, zoals de sdkconfig-header en dependencies.lock van de projectkopie aangeven.
+De volledige firmwarebuild voor **v5.0.1** is geslaagd: [build #6](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/actions/runs/38127239675).
+Het kant-en-klare **Bestway_Matter_v5.bin** staat bij de [release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/tag/v5.0.1), samen met de checksum en buildgegevens.
+
+1. Download het .bin-bestand onder **Assets**.
+2. Open de OTA-pagina in de webinterface van je module.
+3. Kies het bestand en start de update. Houd de voeding en WiFi beschikbaar.
+4. Wacht op de herstart en controleer de versie.
+
+De webinterface zit in het firmwarebestand. Bij een normale OTA-update blijven je instellingen en Matter-koppelingen behouden; een factory reset of NVS-wisactie is niet nodig.
+
+Voor een lege ESP32-C6 moet je de eerste keer via USB flashen. Er staat nog geen complete USB-installatieset bij de release; volg daarvoor de [bouwinstructies](BUILD_NL.md).
+
+## Mijn bouwomgeving
+
+- GitHub-runner: Ubuntu 22.04 met Python 3.12.
+- ESP-IDF: v5.5.5.
 - ESP-Matter: `ff9f07ecb0bf01d7a2db5428149ef16bf601774c`.
 - connectedhomeip: `539342f32d5f4dc93761c2f9325afe29270068f1`.
-- Target: ESP32-C6, met de bestaande `firmware/sdkconfig` en partities.
+- Target: ESP32-C6 met de meegeleverde `firmware/sdkconfig` en partities.
 
-De workflow controleert of de CHIP-submodule exact bij deze basis past en stopt bij een afwijking. Hij installeert alleen de ESP32-C6 IDF-tools en slaat het bouwen van Matter hosttools over. De firmwarebronnen worden niet aangepast.
+Op mijn eigen computer bouw ik met Python 3.14.4. Beide builds slagen. De workflow controleert de SDK-revisies en voert de projectcontroles uit voordat hij de firmware bouwt.
 
-## Installeren in de bestaande lokale GitHub-map
+## Zelf een GitHub-build starten
 
-Download `Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip` naar Downloads. Voer uit vanuit de lokale repository en stop bij een fout:
+De workflow staat al in deze repository. In je eigen fork moet je Actions eventueel eerst inschakelen.
 
-```bash
-git pull --ff-only
-unzip -o ~/Downloads/Bestway_GitHub_Actions_ESP32C6_MoblyFix.zip -d .
-git add -- .github/workflows/build-esp32c6.yml docs/GITHUB_ACTIONS_NL.md docs/GITHUB_ACTIONS_EN.md
-git diff --cached --stat
-git commit -m "Add GitHub Actions ESP-IDF and ESP-Matter firmware build"
-git push origin main
-```
+1. Ga naar **Actions**.
+2. Kies **Build ESP32-C6 firmware**.
+3. Kies **Run workflow → main → Run workflow**.
+4. Open de run om de voortgang te volgen.
 
-## Python-installatie: mobly-conflict
+Wijzigingen aan firmware, tests, `tools/verify.sh` of de buildworkflow starten ook automatisch een build. Alleen documentatie- en hardwarewijzigingen doen dat niet.
 
-De eerste workflow gebruikte ESP-Matter `install.sh --no-host-tool`. Die slaat hosttools over, maar installeert nog steeds de volledige CHIP-testomgeving via `bootstrap.sh -p all,esp32`, inclusief `mobly`.
+De SDK-download en build kunnen een tijd duren. De workflow heeft een limiet van 90 minuten. Bij een fout vind je het log onder de mislukte stap.
 
-Deze workflow voert eerst `bootstrap.sh -p esp32` uit en daarna `install.sh --no-host-tool --no-bootstrap`. De CHIP-buildomgeving (GN/ZAP en de basisrequirements) blijft aanwezig; de aanvullende testdependencies uit `requirements.all.txt` worden niet geïnstalleerd. De ESP-IDF-, ESP-Matter- en CHIP-versies blijven gelijk. Er wordt geen dependencyresolver omzeild en er worden geen firmwarebronnen gewijzigd.
+## Download van een eigen build
 
-Het gedeelde foutfragment bevat geen specifieke conflicterende dependency. Deze aanpassing is daarom nog geen bewijs dat de volledige build slaagt. Controleer de nieuwe GitHub-run. Bij een nieuwe fout: deel het log vanaf de eerste fout, inclusief de regels onder `The conflict is caused by` als die aanwezig zijn.
+Na een geslaagde run staat onder **Artifacts** de download `Bestway_ESP32C6_OTA_<runnummer>`. Pak die ZIP uit en gebruik het .bin-bestand op de OTA-pagina. De ZIP zelf upload je niet naar de module.
 
-## Build starten
+De download bevat:
 
-1. Open je repository op GitHub.
-2. Ga naar **Actions** en schakel workflows in als GitHub daarom vraagt.
-3. Kies **Build ESP32-C6 firmware**.
-4. Kies **Run workflow → main → Run workflow**.
-5. Open de run om voortgang en foutmeldingen te bekijken.
+- `Bestway_Matter_v5.bin`: de firmware met webinterface.
+- `SHA256SUMS.txt`: de checksum.
+- `build-info.json`: de broncommit, SDK-versies en bestandsgegevens.
+- `README.txt`: korte OTA-instructies.
 
-De eerste push van de workflow start ook een build. Latere wijzigingen aan firmware, tests, `tools/verify.sh` of deze workflow op `main` starten automatisch een build. Alleen documentatie- en hardwarewijzigingen starten geen firmwarebuild.
+Artifacts blijven normaal 30 dagen beschikbaar en vragen doorgaans een GitHub-aanmelding. Gepubliceerde firmware vind je ook bij [Releases](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases).
 
-De eerste build downloadt meerdere SDK's en dependencies en kan lang duren. Een maximum van 90 minuten voorkomt dat een run eindeloos blijft lopen. Bij een rode run: open de mislukte stap en deel de eerste relevante foutmelding. Wijzig geen SDK-versies op goed geluk.
+## Hoe ik releases maak
 
-## Firmware downloaden
-
-Na een groene build staat onderaan de run bij **Artifacts** een download met naam `Bestway_ESP32C6_OTA_<runnummer>`. Artifactdownloads vereisen doorgaans een GitHub-aanmelding. De workflow bewaart ze 30 dagen, of korter als je repositorylimiet dat voorschrijft.
-
-Pak de download uit. Hij bevat:
-
-- `Bestway_Matter_v5.bin`: appbestand voor OTA.
-- `SHA256SUMS.txt`: checksum.
-- `build-info.json`: broncommit, SDK-versies en bestandsgegevens.
-- `README.txt`: korte gebruiksuitleg.
-
-Open de bestaande OTA-pagina van de module en kies **het uitgepakte .bin-bestand**, niet de ZIP. Houd voeding en WiFi beschikbaar. Een normale OTA-update vraagt geen factory reset en geen NVS-wisactie.
-
-Dit artifact bevat geen complete USB-installatieset voor een lege ESP. Eerste installatie via USB volgt de [bouwinstructies](BUILD_NL.md). Een groene build bewijst compilatie, geen fysieke test op een spa.
-
-## Status en publicatie
-
-De workflow en shellsyntaxis zijn lokaal gecontroleerd. Een volledige ESP-IDF/Matter-build is in deze werkomgeving niet uitgevoerd. De eerste GitHub-run moet de SDK-installatie en volledige compilatie bevestigen.
-
-De workflow werkt met alleen leestoegang tot de repository. Hij publiceert geen GitHub Release en voert geen automatische OTA uit. Voor langdurig openbaar beschikbare firmware kan na succesvolle build en hardwaretest een Release met de geteste .bin worden gemaakt.
-
-Bronnen: [GitHub — handmatig starten](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow), [artifact-upload](https://github.com/actions/upload-artifact), [Espressif Matter-installatie](https://docs.espressif.com/projects/esp-matter/en/release-v1.4.2/esp32c6/developing.html).
+De buildworkflow bouwt en bewaart het OTA-bestand. De aparte publicatieworkflow controleert de geslaagde build, broncommit en checksum en zet dat bestand bij de release. Geen van beide workflows werkt je module vanzelf bij; je start OTA zelf in de webinterface.

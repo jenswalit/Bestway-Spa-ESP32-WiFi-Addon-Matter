@@ -2,6 +2,12 @@
 
 **English** | [Nederlands](CHANGELOG.md)
 
+## Documentation — 2026-10-11
+
+- Updated both manuals: LazySpaSetup appears about 45 seconds after switching on a new module.
+- Rewrote the GitHub guides and release notes in my own voice, with direct links to the ready-made OTA firmware.
+- Removed outdated build status and references to hardware files still awaiting upload. Firmware remains at 5.0.1.
+
 ## 5.0.1 — 2026-10-10
 
 - Firmware and web version 5.0.1; Matter software version increased from 5001 to 5002. Every firmware update receives a new version.

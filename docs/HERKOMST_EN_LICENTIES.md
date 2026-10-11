@@ -33,7 +33,7 @@ componentlicenties staan in `docs/third-party/`.
 
 ## Hardware en merknamen
 
-Het V2M-hardwarepakket bevat schema, PCB-bron en Gerber-bestanden. Zie [het hardwareoverzicht](../hardware/BWC_V2M/README.md) nadat dat pakket is geüpload. Een complete assemblage-onderdelenlijst wordt nog afgerond. Een afzonderlijke hardwarelicentie is nog niet vastgesteld; de softwarelicentie wordt hier niet automatisch uitgebreid tot de PCB-ontwerpbestanden.
+Het V2M-hardwarepakket bevat schema, PCB-bron en Gerber-bestanden. Zie [het hardwareoverzicht](../hardware/BWC_V2M/README.md). Een complete assemblage-onderdelenlijst wordt nog afgerond. Een afzonderlijke hardwarelicentie is nog niet vastgesteld; de softwarelicentie wordt hier niet automatisch uitgebreid tot de PCB-ontwerpbestanden.
 
 Bestway en Lay-Z-Spa worden gebruikt om de toepassing te beschrijven.
 Dit is een onafhankelijk hobbyproject, geen officiële Bestway WiFi-module.

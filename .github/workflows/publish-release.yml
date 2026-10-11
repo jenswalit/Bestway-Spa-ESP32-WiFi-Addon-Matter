@@ -63,7 +63,9 @@ jobs:
           
           ## Nederlands
           
-          Correctie voor demomodus op de ESP32-C6. De gesimuleerde doeltemperatuur is nu geldig en zichtbaar; de plus/min-knoppen werken ook bij een gekozen 4-wire-model zonder Godmode. De beperkingen voor echte hardware blijven behouden. Firmware, webinterface en Matter-versietekst zijn gelijkgetrokken naar 5.0.1 (Matter softwareversienummer 5002).
+          In deze versie heb ik de temperatuurbediening in demomodus opgelost. De doeltemperatuur verschijnt meteen en de plus/min-knoppen werken ook als je een 4-wire-model hebt gekozen, zonder Godmode. Op een echte spa blijven de mogelijkheden van je gekozen model gelden.
+          
+          Ik heb v5.0.1 lokaal gebouwd met Python 3.14.4 en op mijn module in gebruik. De volledige GitHub-build is ook geslaagd. Het kant-en-klare OTA-bestand staat hieronder bij Assets, inclusief de webinterface. Firmware, webinterface en Matter tonen nu versie 5.0.1 (Matter softwareversienummer 5002).
           
           ### Bestaande module bijwerken via OTA
           1. Download **Bestway_Matter_v5.bin** onder Assets.
@@ -73,11 +75,13 @@ jobs:
           
           Een normale OTA-update vereist geen factory reset of NVS-wisactie. Matter-identiteit en bestaande instellingen horen behouden te blijven.
           
-          Deze download is een appbestand voor bestaande modules met een compatibele partitie-indeling. Voor de eerste installatie op een lege ESP: zie [BUILD_NL.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.1/docs/BUILD_NL.md).
+          Deze download is een appbestand voor bestaande modules met een compatibele partitie-indeling. Voor de eerste installatie op een lege ESP: zie [BUILD_NL.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/main/docs/BUILD_NL.md).
           
           ## English
           
-          Demo-mode fix for ESP32-C6. The simulated target temperature is now valid and visible; plus/minus controls work with a selected 4-wire model without Godmode. Real-hardware restrictions remain in place. Firmware, web interface and Matter version strings now report 5.0.1 (Matter software version number 5002).
+          In this version I fixed the demo-mode temperature controls. The target temperature appears immediately and the plus/minus buttons also work with a selected 4-wire model, without Godmode. On a real spa, the capabilities of your selected model still apply.
+          
+          I built v5.0.1 locally with Python 3.14.4 and am running it on my module. The full GitHub build passed too. The ready-made OTA image is available below under Assets, with the web interface included. Firmware, web interface and Matter now show version 5.0.1 (Matter software version number 5002).
           
           ### Update an existing module using OTA
           1. Download **Bestway_Matter_v5.bin** under Assets.
@@ -87,13 +91,13 @@ jobs:
           
           Normal OTA updates require neither factory reset nor NVS erasure. Matter identity and existing settings should be retained.
           
-          This is an application image for existing modules with a compatible partition layout. For first installation on a blank ESP, see [BUILD_EN.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/v5.0.1/docs/BUILD_EN.md).
+          This is an application image for existing modules with a compatible partition layout. For first installation on a blank ESP, see [BUILD_EN.md](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/blob/main/docs/BUILD_EN.md).
           
           ## Build / validation
           
           - Target: ESP32-C6.
           - ESP-IDF: v5.5.5.
-          - Python CI: 3.12; local Python 3.14.4 build reported working by the user.
+          - Python: 3.12 on GitHub; I use 3.14.4 for my local build.
           - ESP-Matter: ff9f07ecb0bf01d7a2db5428149ef16bf601774c.
           - CHIP: 539342f32d5f4dc93761c2f9325afe29270068f1.
           - Source commit: d1734758702d96779d5d2353547be9c651c8d0ae.
@@ -101,9 +105,9 @@ jobs:
           - App size: @APP_SIZE@ bytes.
           - SHA-256: @APP_SHA256@.
           
-          Compilatie en checksumcontrole zijn geslaagd. Een fysieke spa-test van dit CI-bestand is nog niet bevestigd.
+          Het downloadbestand komt uit de geslaagde GitHub-build. De checksum en bijbehorende broncode zijn gecontroleerd.
           
-          Compilation and checksum verification passed. A physical spa test of this CI image has not yet been confirmed.
+          The download comes from the successful GitHub build. Its checksum and matching source revision have been verified.
           
           ## Downloads
           
@@ -135,7 +139,8 @@ jobs:
             fi
             is_draft="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json isDraft --jq '.isDraft')"
             if [ "$is_draft" != "true" ]; then
-              echo "Release is already published; leaving it in place."
+              gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --notes-file release-notes.md
+              echo "Updated release notes; existing firmware downloads kept in place."
               exit 0
             fi
           else
