@@ -63,9 +63,9 @@ jobs:
           
           ## Nederlands
           
-          In deze versie heb ik de temperatuurbediening in demomodus opgelost. De doeltemperatuur verschijnt meteen en de plus/min-knoppen werken ook als je een 4-wire-model hebt gekozen, zonder Godmode. Op een echte spa blijven de mogelijkheden van je gekozen model gelden.
+          In deze versie is de temperatuurbediening in demomodus opgelost. De doeltemperatuur verschijnt meteen en de plus/min-knoppen werken ook als je een 4-wire-model hebt gekozen, zonder Godmode. Op een echte spa blijven de mogelijkheden van je gekozen model gelden.
           
-          Ik heb v5.0.1 lokaal gebouwd met Python 3.14.4 en op mijn module in gebruik. De volledige GitHub-build is ook geslaagd. Het kant-en-klare OTA-bestand staat hieronder bij Assets, inclusief de webinterface. Firmware, webinterface en Matter tonen nu versie 5.0.1 (Matter softwareversienummer 5002).
+          De lokale build van v5.0.1 met Python 3.14.4 werkt en de firmware is op de module in gebruik. De firmware is ook op GitHub gebouwd; de volledige build is geslaagd. Het kant-en-klare OTA-bestand staat hieronder bij Assets, inclusief de webinterface. Firmware, webinterface en Matter tonen nu versie 5.0.1 (Matter softwareversienummer 5002).
           
           ### Bestaande module bijwerken via OTA
           1. Download **Bestway_Matter_v5.bin** onder Assets.
@@ -79,9 +79,9 @@ jobs:
           
           ## English
           
-          In this version I fixed the demo-mode temperature controls. The target temperature appears immediately and the plus/minus buttons also work with a selected 4-wire model, without Godmode. On a real spa, the capabilities of your selected model still apply.
+          This version fixes the demo-mode temperature controls. The target temperature appears immediately and the plus/minus buttons also work with a selected 4-wire model, without Godmode. On a real spa, the capabilities of your selected model still apply.
           
-          I built v5.0.1 locally with Python 3.14.4 and am running it on my module. The full GitHub build passed too. The ready-made OTA image is available below under Assets, with the web interface included. Firmware, web interface and Matter now show version 5.0.1 (Matter software version number 5002).
+          The local v5.0.1 build with Python 3.14.4 works and the firmware is running on the module. The firmware has also been built on GitHub; the full build passed. The ready-made OTA image is available below under Assets, with the web interface included. Firmware, web interface and Matter now show version 5.0.1 (Matter software version number 5002).
           
           ### Update an existing module using OTA
           1. Download **Bestway_Matter_v5.bin** under Assets.
@@ -97,7 +97,7 @@ jobs:
           
           - Target: ESP32-C6.
           - ESP-IDF: v5.5.5.
-          - Python: 3.12 on GitHub; I use 3.14.4 for my local build.
+          - Python: 3.12 on GitHub; 3.14.4 for the successful local build.
           - ESP-Matter: ff9f07ecb0bf01d7a2db5428149ef16bf601774c.
           - CHIP: 539342f32d5f4dc93761c2f9325afe29270068f1.
           - Source commit: d1734758702d96779d5d2353547be9c651c8d0ae.

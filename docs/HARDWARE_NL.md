@@ -2,7 +2,7 @@
 
 [English](HARDWARE_EN.md)
 
-Mijn werkende opstelling: ESP32-C6-DevKitC-1-N8, MIAMI2021, 6-wire Type1.
+Werkende opstelling: ESP32-C6-DevKitC-1-N8, MIAMI2021, 6-wire Type1.
 
 | Verbinding | Signaal | GPIO |
 |---|---|---:|

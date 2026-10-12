@@ -36,9 +36,9 @@ De dependency-componenten worden bij de eerste build gedownload volgens
 ## Python 3.14 kiezen
 
 Python draait op de ontwikkelcomputer, niet op de ESP32. Een andere Python-versie
-vereist geen wijziging van Matter-koppelingen of apparaatinstellingen. Ik bouw lokaal
-met Python 3.14.4; dat werkt op mijn computer. Op GitHub gebruik ik Python 3.12,
-waarmee de volledige firmwarebuild ook slaagt. Voor OTA heb je zelf geen Python
+vereist geen wijziging van Matter-koppelingen of apparaatinstellingen. De lokale build
+met Python 3.14.4 werkt. De firmware is ook op GitHub gebouwd met Python 3.12;
+de volledige build is geslaagd. Voor OTA heb je zelf geen Python
 nodig.
 
 Bij een overstap maakt ESP-IDF een aparte omgeving per Python-versie. Als

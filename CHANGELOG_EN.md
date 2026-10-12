@@ -5,7 +5,7 @@
 ## Documentation — 2026-10-11
 
 - Updated both manuals: LazySpaSetup appears about 45 seconds after switching on a new module.
-- Rewrote the GitHub guides and release notes in my own voice, with direct links to the ready-made OTA firmware.
+- Updated the GitHub guides and release notes with clear, friendly wording, with direct links to the ready-made OTA firmware.
 - Removed outdated build status and references to hardware files still awaiting upload. Firmware remains at 5.0.1.
 
 ## 5.0.1 — 2026-10-10

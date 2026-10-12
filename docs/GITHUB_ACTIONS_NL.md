@@ -2,7 +2,7 @@
 
 **Nederlands** | [English](GITHUB_ACTIONS_EN.md)
 
-Ik laat de firmware ook op GitHub bouwen. Zo kun je een kant-en-klaar OTA-bestand downloaden zonder zelf ESP-IDF en ESP-Matter te installeren.
+De firmware is ook op GitHub gebouwd. Zo kun je een kant-en-klaar OTA-bestand downloaden zonder zelf ESP-IDF en ESP-Matter te installeren.
 
 ## Meteen bijwerken
 
@@ -18,7 +18,7 @@ De webinterface zit in het firmwarebestand. Bij een normale OTA-update blijven j
 
 Voor een lege ESP32-C6 moet je de eerste keer via USB flashen. Er staat nog geen complete USB-installatieset bij de release; volg daarvoor de [bouwinstructies](BUILD_NL.md).
 
-## Mijn bouwomgeving
+## Bouwomgeving
 
 - GitHub-runner: Ubuntu 22.04 met Python 3.12.
 - ESP-IDF: v5.5.5.
@@ -26,7 +26,7 @@ Voor een lege ESP32-C6 moet je de eerste keer via USB flashen. Er staat nog geen
 - connectedhomeip: `539342f32d5f4dc93761c2f9325afe29270068f1`.
 - Target: ESP32-C6 met de meegeleverde `firmware/sdkconfig` en partities.
 
-Op mijn eigen computer bouw ik met Python 3.14.4. Beide builds slagen. De workflow controleert de SDK-revisies en voert de projectcontroles uit voordat hij de firmware bouwt.
+Lokaal is de firmware gebouwd met Python 3.14.4. Beide builds slagen. De workflow controleert de SDK-revisies en voert de projectcontroles uit voordat hij de firmware bouwt.
 
 ## Zelf een GitHub-build starten
 
@@ -54,6 +54,6 @@ De download bevat:
 
 Artifacts blijven normaal 30 dagen beschikbaar en vragen doorgaans een GitHub-aanmelding. Gepubliceerde firmware vind je ook bij [Releases](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases).
 
-## Hoe ik releases maak
+## Releases
 
 De buildworkflow bouwt en bewaart het OTA-bestand. De aparte publicatieworkflow controleert de geslaagde build, broncommit en checksum en zet dat bestand bij de release. Geen van beide workflows werkt je module vanzelf bij; je start OTA zelf in de webinterface.

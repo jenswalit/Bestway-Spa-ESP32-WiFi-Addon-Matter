@@ -2,7 +2,7 @@
 
 **English** | [Nederlands](HARDWARE_NL.md)
 
-My working setup uses an **ESP32-C6-DevKitC-1-N8**, **MIAMI2021** and **six-wire Type1** communication. Check the connections for your own spa model and the status of your chosen PCB revision before installing it.
+The working setup uses an **ESP32-C6-DevKitC-1-N8**, **MIAMI2021** and **six-wire Type1** communication. Check the connections for your own spa model and the status of your chosen PCB revision before installing it.
 
 | Connection | Signal | GPIO |
 |---|---|---:|

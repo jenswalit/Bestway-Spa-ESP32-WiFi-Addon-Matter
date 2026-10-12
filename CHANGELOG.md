@@ -5,7 +5,7 @@
 ## Documentatie — 2026-10-11
 
 - Handleidingen bijgewerkt: bij een nieuwe module verschijnt LazySpaSetup na ongeveer 45 seconden.
-- GitHub-uitleg en releasetekst bijgewerkt in mijn eigen woorden, met directe links naar de kant-en-klare OTA-firmware.
+- GitHub-uitleg en releasetekst bijgewerkt met een toegankelijke, algemene uitleg, met directe links naar de kant-en-klare OTA-firmware.
 - Oude buildstatus en verwijzingen naar nog te uploaden hardwarebestanden opgeruimd. De firmware blijft 5.0.1.
 
 ## 5.0.1 — 2026-10-10

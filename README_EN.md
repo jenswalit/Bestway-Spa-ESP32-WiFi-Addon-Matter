@@ -8,9 +8,9 @@ Control your Bestway Lay-Z-Spa from your phone, Home Assistant, Google Home or
 Apple Home. This ESP32-C6 module sits between the pump and the original display.
 The physical display remains usable.
 
-I made this project so I can control my spa from my phone, Home Assistant or Matter. My setup is an ESP32-C6-DevKitC-1-N8 with a MIAMI2021 (6-wire Type1).
+This project lets you control your spa from your phone, Home Assistant or Matter. The working setup is an ESP32-C6-DevKitC-1-N8 with a MIAMI2021 (6-wire Type1).
 
-This is my hobby project, based on visualapproach's work. It is not an official Bestway WiFi module.
+This is a hobby project, based on visualapproach's work. It is not an official Bestway WiFi module.
 
 ## Choose your starting point
 
@@ -25,7 +25,7 @@ This is my hobby project, based on visualapproach's work. It is not an official 
 
 Ready-made firmware **v5.0.1** is available in the [release](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases/tag/v5.0.1). Download **Bestway_Matter_v5.bin** and select it on your module's OTA page. The web interface is included, so you do not need to install it separately or build the firmware yourself for an OTA update.
 
-The GitHub build passed and the download checksum has been checked. I build locally with Python 3.14.4 and am running v5.0.1 on my module. This version also fixes the temperature controls in demo mode.
+The firmware has also been built on GitHub and the download checksum has been checked. The local build with Python 3.14.4 works too, and v5.0.1 is running on the module. This version also fixes the temperature controls in demo mode.
 
 A complete USB flashing download for a blank ESP is not available yet. Use the [build instructions](docs/BUILD_EN.md) for the first installation. The source ZIP is for building the firmware yourself.
 
@@ -70,7 +70,7 @@ The user manual and the guides below are available in English and Dutch. Each gu
 | Build firmware from source | [Developer build instructions](docs/BUILD_EN.md) |
 
 Before installation, check that your pump, cables and module are compatible.
-My setup is a **MIAMI2021 with 6-wire Type1** and an
+The working setup is a **MIAMI2021 with 6-wire Type1** and an
 **ESP32-C6-DevKitC-1-N8**. The wiring photos are not a universal wiring guide
 for all Bestway models.
 
@@ -89,7 +89,7 @@ This project is based on
 [WiFi-remote-for-Bestway-Lay-Z-SPA by visualapproach](https://github.com/visualapproach/WiFi-remote-for-Bestway-Lay-Z-SPA).
 Thanks to visualapproach and the contributors for their original work.
 
-I adapted this version for the ESP32-C6 with ESP-IDF, ESP-Matter and
+This version is adapted for the ESP32-C6 with ESP-IDF, ESP-Matter and
 the accompanying Home Assistant dashboard. It is a separate project;
 its changes and support are not provided by the original project.
 

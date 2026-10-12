@@ -33,9 +33,9 @@ The examples below assume ESP-IDF at `~/.espressif/release-v5.5/esp-idf` and ESP
 ## Selecting Python 3.14
 
 Python runs on the development computer, not on the ESP32. Changing its version
-does not require changing Matter fabrics or device settings. I build locally
-with Python 3.14.4, which works on my computer. On GitHub I use Python 3.12,
-which also completes the full firmware build. You do not need Python for OTA.
+does not require changing Matter fabrics or device settings. The local build
+with Python 3.14.4 works. The firmware has also been built on GitHub with Python
+3.12, completing the full build successfully. You do not need Python for OTA.
 
 ESP-IDF uses a separate environment for each Python version. If
 `idf5.5_py3.14_env` is missing, create it using the installed Python 3.14:

@@ -2,7 +2,7 @@
 
 **English** | [Nederlands](GITHUB_ACTIONS_NL.md)
 
-I also build the firmware on GitHub, so you can download a ready-made OTA image without installing ESP-IDF and ESP-Matter yourself.
+The firmware has also been built on GitHub, so you can download a ready-made OTA image without installing ESP-IDF and ESP-Matter yourself.
 
 ## Update your module
 
@@ -18,7 +18,7 @@ The web interface is included in the firmware. Normal OTA updates retain your se
 
 A blank ESP32-C6 needs its first installation over USB. The release does not include a complete USB installation package yet; follow the [build instructions](BUILD_EN.md).
 
-## My build environment
+## Build environment
 
 - GitHub runner: Ubuntu 22.04 with Python 3.12.
 - ESP-IDF: v5.5.5.
@@ -26,7 +26,7 @@ A blank ESP32-C6 needs its first installation over USB. The release does not inc
 - connectedhomeip: `539342f32d5f4dc93761c2f9325afe29270068f1`.
 - Target: ESP32-C6 with the supplied `firmware/sdkconfig` and partitions.
 
-On my own computer I build with Python 3.14.4. Both builds pass. The workflow checks SDK revisions and runs the project checks before compiling the firmware.
+The local firmware build uses Python 3.14.4. Both builds pass. The workflow checks SDK revisions and runs the project checks before compiling the firmware.
 
 ## Start your own GitHub build
 
@@ -54,6 +54,6 @@ The download contains:
 
 Artifacts are normally kept for 30 days and generally require a GitHub login. Published firmware is also available under [Releases](https://github.com/lowlander10000/Bestway-Spa-ESP32-WiFi-Addon-Matter/releases).
 
-## How I publish releases
+## Releases
 
 The build workflow compiles and stores the OTA image. A separate publication workflow checks the successful build, source commit and checksum, then attaches that image to the release. Neither workflow updates your module automatically; you start OTA yourself through the web interface.
