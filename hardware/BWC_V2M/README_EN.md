@@ -23,7 +23,11 @@ The [6 October 2026 Gerber ZIP](gerber/BWC_SPA_CONTROL_V2M_2026-10-06.zip) and i
 
 A bare-board order excludes the ESP32, level shifter and other parts. A complete assembly BOM and assembly guide have not yet been published.
 
-[EasyEDA project](https://easyeda.com/editor#project_id=5c570d72ac544b518ed51a159b791d9f) — access for other users depends on project visibility.
+## View the circuit board online
+
+Open the **[circuit board project on OSHWLab](https://oshwlab.com/dboxers/project_aknzpiec)** and select **Open in Editor** to view the design in EasyEDA. Check the board revision and use the [BOM](BOM_EN.md) as the parts list. Save your own copy before making changes.
+
+The checks below apply to the GitHub export dated 6 October 2026. Compare revisions before combining files from the online project and this repository.
 
 ## Opening the design in EasyEDA Standard
 

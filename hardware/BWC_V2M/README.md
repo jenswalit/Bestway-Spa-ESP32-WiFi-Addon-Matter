@@ -23,7 +23,11 @@ De [Gerber-ZIP van 6 oktober 2026](gerber/BWC_SPA_CONTROL_V2M_2026-10-06.zip) en
 
 Een kale printbestelling bevat geen ESP32, levelshifter of overige onderdelen. Een complete assemblage-BOM en montage-instructie zijn nog niet gepubliceerd.
 
-[EasyEDA-project](https://easyeda.com/editor#project_id=5c570d72ac544b518ed51a159b791d9f) — toegang voor andere gebruikers hangt af van de zichtbaarheid van het project.
+## Printplaat online bekijken
+
+Open het **[printplaatproject op OSHWLab](https://oshwlab.com/dboxers/project_aknzpiec)** en kies **Open in Editor** om het ontwerp in EasyEDA te bekijken. Controleer de printversie en gebruik de [BOM](BOM.md) als onderdelenlijst. Bewaar een eigen kopie als je het ontwerp wilt aanpassen.
+
+De controle hieronder geldt voor de GitHub-export van 6 oktober 2026. Vergelijk de revisie voordat je bestanden van het online project en deze repository samen gebruikt.
 
 ## Openen in EasyEDA Standard
 

@@ -58,6 +58,17 @@ kun je ook zonder Home Assistant gebruiken.
 - Koppelen met meerdere Matter-ecosystemen, zonder bestaande koppelingen te wissen.
 - Een Home Assistant-dashboard gebruiken met drie layouts en zeven talen.
 
+## Printplaat en korte uitleg
+
+Het printplaatproject staat op **[OSHWLab / EasyEDA](https://oshwlab.com/dboxers/project_aknzpiec)**. De [onderdelenlijst (BOM)](hardware/BWC_V2M/BOM.md) en de [hardware-uitleg](hardware/BWC_V2M/README.md) staan ook in deze repository.
+
+1. Open het printplaatproject via de link hierboven.
+2. Kies **Open in Editor** om het ontwerp in EasyEDA te openen.
+3. Controleer de gekozen printversie en bekijk de onderdelenlijst voordat je onderdelen of een print bestelt.
+4. Volg de [besteluitleg](hardware/BWC_V2M/BESTELLEN.md) voor een kale print. De ESP32-C6, levelshifter en overige onderdelen bestel en monteer je apart.
+
+Gebruik je liever de bestanden van GitHub? Bij de [hardware](hardware/BWC_V2M/README.md#openen-in-easyeda-standard) staat hoe je het schema en de PCB in EasyEDA Standard opent.
+
 ## Handleidingen
 
 | Wat wil je doen? | Lees dit |

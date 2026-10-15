@@ -56,6 +56,17 @@ work without Home Assistant.
 - Connect multiple Matter ecosystems without removing existing pairings.
 - Use a Home Assistant dashboard with three layouts and seven languages.
 
+## Circuit board and quick start
+
+The circuit board project is available on **[OSHWLab / EasyEDA](https://oshwlab.com/dboxers/project_aknzpiec)**. The [bill of materials (BOM)](hardware/BWC_V2M/BOM_EN.md) and [hardware guide](hardware/BWC_V2M/README_EN.md) are also included in this repository.
+
+1. Open the circuit board project using the link above.
+2. Select **Open in Editor** to open the design in EasyEDA.
+3. Check the board revision and parts list before ordering a board or components.
+4. Follow the [ordering guide](hardware/BWC_V2M/ORDERING_EN.md) for a bare board. Order and fit the ESP32-C6, level shifter and other components separately.
+
+Prefer the GitHub files? The [hardware guide](hardware/BWC_V2M/README_EN.md#opening-the-design-in-easyeda-standard) explains how to open the schematic and PCB in EasyEDA Standard.
+
 ## Guides
 
 The user manual and the guides below are available in English and Dutch. Each guide links to its other language.
