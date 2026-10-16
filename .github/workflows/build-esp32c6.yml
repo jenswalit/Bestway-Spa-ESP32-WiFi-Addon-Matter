@@ -157,3 +157,39 @@ jobs:
           path: dist/ota/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Prepare full USB flash package (blank ESP32-C6)
+        run: |
+          sdk_root="$RUNNER_TEMP/bestway-sdk"
+          source "$sdk_root/esp-idf/export.sh"
+          cd "$GITHUB_WORKSPACE/firmware/build"
+          mkdir -p "$GITHUB_WORKSPACE/dist/usb"
+          python -m esptool --chip esp32c6 merge_bin \
+            -o "$GITHUB_WORKSPACE/dist/usb/Bestway_Matter_v5_FULL_0x0.bin" @flash_args
+          # Einzeldateien mit Verzeichnisstruktur, damit "write_flash @flash_args" funktioniert
+          cp flash_args "$GITHUB_WORKSPACE/dist/usb/"
+          for f in $(grep -oE '[^ ]+\.bin' flash_args); do
+            mkdir -p "$GITHUB_WORKSPACE/dist/usb/$(dirname "$f")"
+            cp "$f" "$GITHUB_WORKSPACE/dist/usb/$f"
+          done
+          cd "$GITHUB_WORKSPACE/dist/usb"
+          sha256sum $(find . -name '*.bin' | sort) > SHA256SUMS.txt
+          printf '%s\n' \
+            'Komplettes USB-Flashpaket fuer einen leeren ESP32-C6 (8 MB).' \
+            '' \
+            'Variante 1 (eine Datei): Bestway_Matter_v5_FULL_0x0.bin an Adresse 0x0 schreiben:' \
+            '  python -m esptool --chip esp32c6 -p COM5 -b 460800 write_flash 0x0 Bestway_Matter_v5_FULL_0x0.bin' \
+            '' \
+            'Variante 2 (Einzeldateien), in diesem Ordner ausfuehren:' \
+            '  python -m esptool --chip esp32c6 -p COM5 -b 460800 write_flash @flash_args' \
+            > README.txt
+          cat flash_args
+          ls -lR
+
+      - name: Upload full USB flash artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bestway_ESP32C6_USB_FULL_${{ github.run_number }}
+          path: dist/usb/
+          if-no-files-found: error
+          retention-days: 30
